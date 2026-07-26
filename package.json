@@ -1,0 +1,11 @@
+{
+  "name": "vnlunarcal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vietnamese lunar calendar four-pillars web UI",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test scripts/verify.mjs"
+  }
+}

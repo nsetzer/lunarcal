@@ -1,0 +1,321 @@
+:root {
+  --ink: #1d2a24;
+  --muted: #4d6158;
+  --paper: #f3efe4;
+  --panel: rgba(255, 252, 245, 0.88);
+  --line: rgba(29, 42, 36, 0.14);
+  --accent: #0f6b5c;
+  --accent-soft: #c8e2d8;
+  --glow: #e8c36a;
+  --shadow: 0 24px 60px rgba(18, 36, 28, 0.18);
+  --radius: 18px;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Be Vietnam Pro", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: #dfe8df;
+  line-height: 1.5;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(232, 195, 106, 0.45), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 90% 20%, rgba(15, 107, 92, 0.28), transparent 50%),
+    linear-gradient(160deg, #eef4ea 0%, #d7e4d8 42%, #c5d5c8 100%);
+  z-index: -1;
+}
+
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(29, 42, 36, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 42, 36, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at 50% 30%, black 20%, transparent 75%);
+}
+
+.shell {
+  width: min(720px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 3.5rem 0 4rem;
+  animation: rise 700ms ease both;
+}
+
+.brand-mark {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lede {
+  margin: 0.75rem 0 0;
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 0.8fr;
+  gap: 0.85rem;
+  margin-top: 2rem;
+  padding: 1.1rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+  animation: rise 800ms 80ms ease both;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: #fffdf8;
+  text-transform: none;
+  letter-spacing: normal;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.lunar-meta {
+  margin: 1.25rem 0 0.75rem;
+  min-height: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  animation: rise 850ms 120ms ease both;
+}
+
+.pillars {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: rise 900ms 160ms ease both;
+}
+
+.pillars th,
+.pillars td {
+  padding: 0.95rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.pillars thead th {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: linear-gradient(180deg, rgba(200, 226, 216, 0.65), transparent);
+}
+
+.pillars tbody th {
+  font-weight: 700;
+  width: 22%;
+}
+
+.pillars tbody tr:last-child th,
+.pillars tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.pillars tbody tr {
+  transition: background 160ms ease;
+}
+
+.pillars tbody tr:hover {
+  background: rgba(200, 226, 216, 0.35);
+}
+
+.emoji {
+  display: inline-block;
+  margin-right: 0.25rem;
+  font-size: 1.15rem;
+  transform-origin: center;
+  animation: pop 500ms ease both;
+}
+
+.pillars tbody tr:nth-child(1) .emoji {
+  animation-delay: 40ms;
+}
+.pillars tbody tr:nth-child(2) .emoji {
+  animation-delay: 90ms;
+}
+.pillars tbody tr:nth-child(3) .emoji {
+  animation-delay: 140ms;
+}
+.pillars tbody tr:nth-child(4) .emoji {
+  animation-delay: 190ms;
+}
+
+.appendix {
+  margin-top: 3rem;
+  padding-top: 0.5rem;
+  animation: rise 950ms 200ms ease both;
+}
+
+.appendix h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.appendix-lede {
+  margin: 0.55rem 0 0;
+  max-width: 40rem;
+  color: var(--muted);
+}
+
+.appendix-block .appendix-lede {
+  margin: 0 0 0.85rem;
+}
+
+.appendix-block .appendix-lede + .appendix-lede {
+  margin-top: -0.25rem;
+}
+
+.appendix-block {
+  margin-top: 1.5rem;
+}
+
+.appendix-block h3 {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.ref-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.ref-table th,
+.ref-table td {
+  padding: 0.75rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.ref-table thead th {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: linear-gradient(180deg, rgba(200, 226, 216, 0.65), transparent);
+}
+
+.ref-table tbody tr:last-child th,
+.ref-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ref-table tbody tr:hover {
+  background: rgba(200, 226, 216, 0.35);
+}
+
+.ref-table td:first-child {
+  width: 3rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .shell {
+    padding-top: 2.25rem;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .pillars th,
+  .pillars td,
+  .ref-table th,
+  .ref-table td {
+    padding: 0.8rem;
+  }
+}

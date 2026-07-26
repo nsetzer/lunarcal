@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VN Lunar Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+    <main class="shell">
+      <header class="brand">
+        <p class="brand-mark">VN Lunar Calendar</p>
+        <h1>Four pillars</h1>
+        <p class="lede">
+          Pick a Gregorian date and time to see the Vietnamese element and animal
+          for year, month, day, and hour.
+        </p>
+      </header>
+
+      <form class="controls" autocomplete="off">
+        <label>
+          <span>Date</span>
+          <input id="date" type="date" required />
+        </label>
+        <label>
+          <span>Hour</span>
+          <input id="hour" type="number" min="0" max="23" step="1" required />
+        </label>
+        <label>
+          <span>Minutes</span>
+          <input id="minute" type="number" min="0" max="59" step="1" required />
+        </label>
+      </form>
+
+      <p id="lunar-meta" class="lunar-meta" aria-live="polite"></p>
+
+      <table id="pillars" class="pillars">
+        <thead>
+          <tr>
+            <th scope="col">Pillar</th>
+            <th scope="col">Element</th>
+            <th scope="col">Animal</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <aside class="appendix" aria-labelledby="appendix-title">
+        <h2 id="appendix-title">Appendix</h2>
+        <p class="appendix-lede">
+          Reference lists for the five elements (Ngũ hành) and twelve Vietnamese
+          zodiac animals (Địa chi), in cycle order.
+        </p>
+
+        <section class="appendix-block" aria-labelledby="elements-title">
+          <h3 id="elements-title">Elements</h3>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Element</th>
+                <th scope="col">Vietnamese</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><span class="emoji" aria-hidden="true">🌳</span> Wood</td>
+                <td>Mộc</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><span class="emoji" aria-hidden="true">🔥</span> Fire</td>
+                <td>Hỏa</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><span class="emoji" aria-hidden="true">🌍</span> Earth</td>
+                <td>Thổ</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><span class="emoji" aria-hidden="true">⚙️</span> Metal</td>
+                <td>Kim</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><span class="emoji" aria-hidden="true">💧</span> Water</td>
+                <td>Thủy</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="zodiac-title">
+          <h3 id="zodiac-title">Zodiac animals</h3>
+          <p class="appendix-lede">
+            The twelve animals follow the Earthly Branch order (Địa chi), a fixed
+            cycle used for years, months, days, and hours: Rat, Buffalo, Tiger,
+            Cat, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig. Folklore
+            ties that sequence to the Jade Emperor’s race — the Rat finished
+            first by riding the Buffalo’s back, and the rest arrived in the
+            places shown below. In the Vietnamese zodiac the fourth place is the
+            Cat (Mão), where Chinese tradition uses the Rabbit.
+          </p>
+          <p class="appendix-lede">
+            <strong>Friends</strong> are triad allies (Tam hợp): four groups of
+            three animals spaced four years apart that support one another —
+            Rat–Dragon–Monkey, Buffalo–Snake–Rooster, Tiger–Horse–Dog, and
+            Cat–Goat–Pig.
+            <strong>Enemies</strong> are opposite clashes (Tương xung): each
+            animal sits across the twelve-year circle from one other, six years
+            apart, and those pairs are considered in conflict.
+          </p>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Animal</th>
+                <th scope="col">Vietnamese</th>
+                <th scope="col">Friends</th>
+                <th scope="col">Enemies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><span class="emoji" aria-hidden="true">🐀</span> Rat</td>
+                <td>Tý</td>
+                <td><span class="emoji" aria-label="Dragon, Monkey">🐉 🐒</span></td>
+                <td><span class="emoji" aria-label="Horse">🐴</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><span class="emoji" aria-hidden="true">🐃</span> Buffalo</td>
+                <td>Sửu</td>
+                <td><span class="emoji" aria-label="Snake, Rooster">🐍 🐓</span></td>
+                <td><span class="emoji" aria-label="Goat">🐐</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><span class="emoji" aria-hidden="true">🐅</span> Tiger</td>
+                <td>Dần</td>
+                <td><span class="emoji" aria-label="Horse, Dog">🐴 🐕</span></td>
+                <td><span class="emoji" aria-label="Monkey">🐒</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><span class="emoji" aria-hidden="true">🐈</span> Cat</td>
+                <td>Mão</td>
+                <td><span class="emoji" aria-label="Goat, Pig">🐐 🐷</span></td>
+                <td><span class="emoji" aria-label="Rooster">🐓</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><span class="emoji" aria-hidden="true">🐉</span> Dragon</td>
+                <td>Thìn</td>
+                <td><span class="emoji" aria-label="Rat, Monkey">🐀 🐒</span></td>
+                <td><span class="emoji" aria-label="Dog">🐕</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><span class="emoji" aria-hidden="true">🐍</span> Snake</td>
+                <td>Tỵ</td>
+                <td><span class="emoji" aria-label="Buffalo, Rooster">🐃 🐓</span></td>
+                <td><span class="emoji" aria-label="Pig">🐷</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><span class="emoji" aria-hidden="true">🐴</span> Horse</td>
+                <td>Ngọ</td>
+                <td><span class="emoji" aria-label="Tiger, Dog">🐅 🐕</span></td>
+                <td><span class="emoji" aria-label="Rat">🐀</span></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><span class="emoji" aria-hidden="true">🐐</span> Goat</td>
+                <td>Mùi</td>
+                <td><span class="emoji" aria-label="Cat, Pig">🐈 🐷</span></td>
+                <td><span class="emoji" aria-label="Buffalo">🐃</span></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><span class="emoji" aria-hidden="true">🐒</span> Monkey</td>
+                <td>Thân</td>
+                <td><span class="emoji" aria-label="Rat, Dragon">🐀 🐉</span></td>
+                <td><span class="emoji" aria-label="Tiger">🐅</span></td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><span class="emoji" aria-hidden="true">🐓</span> Rooster</td>
+                <td>Dậu</td>
+                <td><span class="emoji" aria-label="Buffalo, Snake">🐃 🐍</span></td>
+                <td><span class="emoji" aria-label="Cat">🐈</span></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td><span class="emoji" aria-hidden="true">🐕</span> Dog</td>
+                <td>Tuất</td>
+                <td><span class="emoji" aria-label="Tiger, Horse">🐅 🐴</span></td>
+                <td><span class="emoji" aria-label="Dragon">🐉</span></td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td><span class="emoji" aria-hidden="true">🐷</span> Pig</td>
+                <td>Hợi</td>
+                <td><span class="emoji" aria-label="Cat, Goat">🐈 🐐</span></td>
+                <td><span class="emoji" aria-label="Snake">🐍</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </aside>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
