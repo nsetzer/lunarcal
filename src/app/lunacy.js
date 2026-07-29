@@ -54,6 +54,48 @@ const ANIMAL_EMOJI = {
   Pig: "🐷",
 };
 
+/** Even stem index = Yang (Giáp, Bính, …); odd = Yin (Ất, Đinh, …). */
+const POLARITY_EMOJI = {
+  Yang: "☀️",
+  Yin: "🌙",
+};
+
+/**
+ * Tứ Hành Xung — four-way conflict groups (animals spaced 3 apart).
+ * Enemies of an animal are the other members of its group.
+ */
+const TU_HANH_XUNG_GROUPS = [
+  ["Rat", "Horse", "Cat", "Rooster"],
+  ["Buffalo", "Goat", "Dragon", "Dog"],
+  ["Tiger", "Monkey", "Snake", "Pig"],
+];
+
+const ENEMIES_BY_ANIMAL = Object.fromEntries(
+  TU_HANH_XUNG_GROUPS.flatMap((group) =>
+    group.map((animal) => [animal, group.filter((other) => other !== animal)]),
+  ),
+);
+
+export function stemPolarity(stemIndex) {
+  return stemIndex % 2 === 0 ? "Yang" : "Yin";
+}
+
+/** Yin/yang + element + animal emoji stem, e.g. ☀️🔥🐴 */
+export function formatStemEmojis(element, animal, stemIndex) {
+  const polarity = stemPolarity(stemIndex);
+  return `${POLARITY_EMOJI[polarity] || ""}${ELEMENT_EMOJI[element] || ""}${ANIMAL_EMOJI[animal] || ""}`;
+}
+
+/** Other animals in this animal's Tứ Hành Xung conflict group. */
+export function enemiesOf(animal) {
+  return ENEMIES_BY_ANIMAL[animal] ? [...ENEMIES_BY_ANIMAL[animal]] : [];
+}
+
+/** True if `candidate` is in the Tứ Hành Xung enemy list of `animal`. */
+export function isEnemyOf(animal, candidate) {
+  return (ENEMIES_BY_ANIMAL[animal] || []).includes(candidate);
+}
+
 // Chinese/Vietnamese lunar year bitmaps for 1900–2099 (from lunardate)
 const YEAR_INFOS = [
   0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0,
@@ -206,12 +248,18 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
     lunarMonth: lunar.month,
     lunarYear: lunar.year,
     isLeapMonth: lunar.isLeapMonth,
+    yearStemIndex,
     yearAnimal: ZODIAC[yearBranchIndex],
     yearElement: ELEMENTS[yearStemIndex],
+    yearPolarity: stemPolarity(yearStemIndex),
+    monthStemIndex,
     monthAnimal: ZODIAC[monthBranchIndex],
     monthElement: ELEMENTS[monthStemIndex],
+    monthPolarity: stemPolarity(monthStemIndex),
+    dayStemIndex,
     dayAnimal: ZODIAC[dayBranchIndex],
     dayElement: ELEMENTS[dayStemIndex],
+    dayPolarity: stemPolarity(dayStemIndex),
   };
 
   if (hour !== null && hour !== undefined) {
@@ -220,8 +268,10 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
     const elementIndex = hour % 10;
     data.hour = hour;
     data.minute = minute || 0;
+    data.hourStemIndex = elementIndex;
     data.hourAnimal = ZODIAC[animalIndex];
     data.hourElement = ELEMENTS[elementIndex];
+    data.hourPolarity = stemPolarity(elementIndex);
   }
 
   return data;
@@ -242,6 +292,9 @@ export {
   ELEMENTS,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
+  POLARITY_EMOJI,
+  TU_HANH_XUNG_GROUPS,
+  ENEMIES_BY_ANIMAL,
   fromSolarDate,
   gregorianToLunarAnimals,
   formatPillar,

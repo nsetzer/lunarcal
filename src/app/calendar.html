@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VN Lunar Calendar · Month</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="site-brand" href="./index.html">
+          <span class="site-brand-mark" aria-hidden="true">🌙</span>
+          <span class="site-brand-text">VN Lunar Calendar</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a class="nav-btn" href="./index.html">Pillars</a>
+          <a class="nav-btn" href="./calendar.html" aria-current="page">Calendar</a>
+        </nav>
+      </div>
+    </header>
+    <main class="shell shell--wide">
+      <header class="brand">
+        <p class="brand-mark">Calendar</p>
+        <h1>Month view</h1>
+        <p class="lede">
+          Compare two dates, then browse a Gregorian month with lunar day and
+          daily stem markers.
+        </p>
+      </header>
+
+      <section class="date-pair" aria-label="Compare dates">
+        <div class="date-card">
+          <label>
+            <span>Date A</span>
+            <input id="date-a" type="date" required />
+          </label>
+          <p id="stem-a" class="stem-emoji" aria-live="polite"></p>
+        </div>
+        <div class="date-card">
+          <label>
+            <span>Date B</span>
+            <input id="date-b" type="date" required />
+          </label>
+          <p id="stem-b" class="stem-emoji" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <form class="controls controls--month" autocomplete="off">
+        <label>
+          <span>Month</span>
+          <input id="view-month" type="number" min="1" max="12" step="1" required />
+        </label>
+        <label>
+          <span>Year</span>
+          <input id="view-year" type="number" min="1900" max="2099" step="1" required />
+        </label>
+      </form>
+
+      <p></p>
+      <p></p>
+      <div class="calendar-wrap">
+        <canvas id="calendar" width="900" height="720" aria-label="Month calendar"></canvas>
+      </div>
+      <p id="view-date" aria-live="polite"></p>
+    </main>
+    <script type="module" src="./calendar.js?v=3"></script>
+  </body>
+</html>

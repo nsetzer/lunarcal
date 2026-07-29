@@ -1,4 +1,4 @@
-import { gregorianToLunarAnimals, formatPillar } from "./lunacy.js";
+import { gregorianToLunarAnimals, formatPillar } from "./lunacy.js?v=3";
 
 const dateInput = document.getElementById("date");
 const hourInput = document.getElementById("hour");

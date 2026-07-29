@@ -6,10 +6,8 @@ The web UI lives in `src/app`. The original Python helper is in `src/lunacy/luna
 
 ## Features
 
-- Date, hour, and minute inputs (defaults to 2025-10-02 at 04:15)
-- Live table of element + animal for year / month / day / hour (with emoji)
-- Lunar date readout for the selected Gregorian day
-- Appendix for the five elements and twelve Vietnamese animals, including triad allies (Tam hợp) and opposite clashes (Tương xung)
+- **Pillars** (`index.html`): date, hour, and minute inputs (defaults to 2025-10-02 at 04:15); live year/month/day/hour element + animal table; appendix for Ngũ hành, Thiên can, and Địa chi (Tam hợp / Tứ Hành Xung)
+- **Calendar** (`calendar.html`): compare two dates with yin/yang–element–animal year stems; month canvas view (Monday-first) with Gregorian day, lunar month/day, and daily element + animal
 - Vietnamese zodiac order (Cat in fourth place, not Rabbit)
 
 ## Project layout

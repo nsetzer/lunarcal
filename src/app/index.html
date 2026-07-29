@@ -14,6 +14,18 @@
   </head>
   <body>
     <div class="backdrop" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="site-brand" href="./index.html">
+          <span class="site-brand-mark" aria-hidden="true">🌙</span>
+          <span class="site-brand-text">VN Lunar Calendar</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a class="nav-btn" href="./index.html" aria-current="page">Pillars</a>
+          <a class="nav-btn" href="./calendar.html">Calendar</a>
+        </nav>
+      </div>
+    </header>
     <main class="shell">
       <header class="brand">
         <p class="brand-mark">VN Lunar Calendar</p>
@@ -55,8 +67,10 @@
       <aside class="appendix" aria-labelledby="appendix-title">
         <h2 id="appendix-title">Appendix</h2>
         <p class="appendix-lede">
-          Reference lists for the five elements (Ngũ hành) and twelve Vietnamese
-          zodiac animals (Địa chi), in cycle order.
+          Reference lists for the five elements (Ngũ hành), ten Heavenly Stems
+          (Thiên can), and twelve Earthly Branches / zodiac animals (Địa chi).
+          A year name pairs one stem with one animal — for example, 2026 is a
+          Fire Horse year (Bính Ngọ: Yang Fire + Horse).
         </p>
 
         <section class="appendix-block" aria-labelledby="elements-title">
@@ -99,6 +113,76 @@
           </table>
         </section>
 
+        <section class="appendix-block" aria-labelledby="stems-title">
+          <h3 id="stems-title">Heavenly Stems</h3>
+          <p class="appendix-lede">
+            The ten Heavenly Stems (Thiên can) cycle with the twelve animals to
+            name years and other pillars. Each element appears twice — Yang then
+            Yin — so the full stem–branch calendar repeats every 60 years.
+          </p>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Vietnamese</th>
+                <th scope="col">Element</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Giáp</td>
+                <td><span class="emoji" aria-hidden="true">🌳</span> Yang Wood</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Ất</td>
+                <td><span class="emoji" aria-hidden="true">🌳</span> Yin Wood</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Bính</td>
+                <td><span class="emoji" aria-hidden="true">🔥</span> Yang Fire</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Đinh</td>
+                <td><span class="emoji" aria-hidden="true">🔥</span> Yin Fire</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Mậu</td>
+                <td><span class="emoji" aria-hidden="true">🌍</span> Yang Earth</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Kỷ</td>
+                <td><span class="emoji" aria-hidden="true">🌍</span> Yin Earth</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Canh</td>
+                <td><span class="emoji" aria-hidden="true">⚙️</span> Yang Metal</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Tân</td>
+                <td><span class="emoji" aria-hidden="true">⚙️</span> Yin Metal</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Nhâm</td>
+                <td><span class="emoji" aria-hidden="true">💧</span> Yang Water</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Quý</td>
+                <td><span class="emoji" aria-hidden="true">💧</span> Yin Water</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
         <section class="appendix-block" aria-labelledby="zodiac-title">
           <h3 id="zodiac-title">Zodiac animals</h3>
           <p class="appendix-lede">
@@ -112,14 +196,31 @@
           </p>
           <p class="appendix-lede">
             <strong>Friends</strong> are triad allies (Tam hợp): four groups of
-            three animals spaced four years apart that support one another —
-            Rat–Dragon–Monkey, Buffalo–Snake–Rooster, Tiger–Horse–Dog, and
-            Cat–Goat–Pig.
-            <strong>Enemies</strong> are opposite clashes (Tương xung): each
-            animal sits across the twelve-year circle from one other, six years
-            apart, and those pairs are considered in conflict.
+            three animals spaced four years apart that support one another
+            <ul>
+            <li> Rat–Dragon–Monkey</li>
+            <li> Buffalo–Snake–Rooster</li>
+            <li> Tiger–Horse–Dog</li>
+            <li> Cat–Goat–Pig</li>
+            </ul>
           </p>
-          <table class="ref-table">
+          <p class="appendix-lede">
+            <strong>Enemies</strong> follow
+            <strong>Tứ Hành Xung</strong> (“four conflicting signs”): three
+            groups of four animals whose energies are traditionally considered
+            mutually incompatible. Members of a group sit three steps apart on
+            the zodiac circle (not merely the animal directly opposite, six
+            steps away). This is a cultural compatibility belief often cited
+            for relationships and partnerships, not a scientific system.
+            <ul>
+            <li> Rat–Horse–Cat–Rooster</li>
+            <li> Buffalo–Goat–Dragon–Dog</li>
+            <li> Tiger–Monkey–Snake–Pig</li>
+          </ul>
+
+          </p>
+          <div class="table-scroll">
+          <table class="ref-table ref-table--zodiac">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -135,90 +236,91 @@
                 <td><span class="emoji" aria-hidden="true">🐀</span> Rat</td>
                 <td>Tý</td>
                 <td><span class="emoji" aria-label="Dragon, Monkey">🐉 🐒</span></td>
-                <td><span class="emoji" aria-label="Horse">🐴</span></td>
+                <td><span class="emoji" aria-label="Horse, Cat, Rooster">🐴 🐈 🐓</span></td>
               </tr>
               <tr>
                 <td>2</td>
                 <td><span class="emoji" aria-hidden="true">🐃</span> Buffalo</td>
                 <td>Sửu</td>
                 <td><span class="emoji" aria-label="Snake, Rooster">🐍 🐓</span></td>
-                <td><span class="emoji" aria-label="Goat">🐐</span></td>
+                <td><span class="emoji" aria-label="Goat, Dragon, Dog">🐐 🐉 🐕</span></td>
               </tr>
               <tr>
                 <td>3</td>
                 <td><span class="emoji" aria-hidden="true">🐅</span> Tiger</td>
                 <td>Dần</td>
                 <td><span class="emoji" aria-label="Horse, Dog">🐴 🐕</span></td>
-                <td><span class="emoji" aria-label="Monkey">🐒</span></td>
+                <td><span class="emoji" aria-label="Monkey, Snake, Pig">🐒 🐍 🐷</span></td>
               </tr>
               <tr>
                 <td>4</td>
                 <td><span class="emoji" aria-hidden="true">🐈</span> Cat</td>
                 <td>Mão</td>
                 <td><span class="emoji" aria-label="Goat, Pig">🐐 🐷</span></td>
-                <td><span class="emoji" aria-label="Rooster">🐓</span></td>
+                <td><span class="emoji" aria-label="Rat, Horse, Rooster">🐀 🐴 🐓</span></td>
               </tr>
               <tr>
                 <td>5</td>
                 <td><span class="emoji" aria-hidden="true">🐉</span> Dragon</td>
                 <td>Thìn</td>
                 <td><span class="emoji" aria-label="Rat, Monkey">🐀 🐒</span></td>
-                <td><span class="emoji" aria-label="Dog">🐕</span></td>
+                <td><span class="emoji" aria-label="Buffalo, Goat, Dog">🐃 🐐 🐕</span></td>
               </tr>
               <tr>
                 <td>6</td>
                 <td><span class="emoji" aria-hidden="true">🐍</span> Snake</td>
                 <td>Tỵ</td>
                 <td><span class="emoji" aria-label="Buffalo, Rooster">🐃 🐓</span></td>
-                <td><span class="emoji" aria-label="Pig">🐷</span></td>
+                <td><span class="emoji" aria-label="Tiger, Monkey, Pig">🐅 🐒 🐷</span></td>
               </tr>
               <tr>
                 <td>7</td>
                 <td><span class="emoji" aria-hidden="true">🐴</span> Horse</td>
                 <td>Ngọ</td>
                 <td><span class="emoji" aria-label="Tiger, Dog">🐅 🐕</span></td>
-                <td><span class="emoji" aria-label="Rat">🐀</span></td>
+                <td><span class="emoji" aria-label="Rat, Cat, Rooster">🐀 🐈 🐓</span></td>
               </tr>
               <tr>
                 <td>8</td>
                 <td><span class="emoji" aria-hidden="true">🐐</span> Goat</td>
                 <td>Mùi</td>
                 <td><span class="emoji" aria-label="Cat, Pig">🐈 🐷</span></td>
-                <td><span class="emoji" aria-label="Buffalo">🐃</span></td>
+                <td><span class="emoji" aria-label="Buffalo, Dragon, Dog">🐃 🐉 🐕</span></td>
               </tr>
               <tr>
                 <td>9</td>
                 <td><span class="emoji" aria-hidden="true">🐒</span> Monkey</td>
                 <td>Thân</td>
                 <td><span class="emoji" aria-label="Rat, Dragon">🐀 🐉</span></td>
-                <td><span class="emoji" aria-label="Tiger">🐅</span></td>
+                <td><span class="emoji" aria-label="Tiger, Snake, Pig">🐅 🐍 🐷</span></td>
               </tr>
               <tr>
                 <td>10</td>
                 <td><span class="emoji" aria-hidden="true">🐓</span> Rooster</td>
                 <td>Dậu</td>
                 <td><span class="emoji" aria-label="Buffalo, Snake">🐃 🐍</span></td>
-                <td><span class="emoji" aria-label="Cat">🐈</span></td>
+                <td><span class="emoji" aria-label="Rat, Horse, Cat">🐀 🐴 🐈</span></td>
               </tr>
               <tr>
                 <td>11</td>
                 <td><span class="emoji" aria-hidden="true">🐕</span> Dog</td>
                 <td>Tuất</td>
                 <td><span class="emoji" aria-label="Tiger, Horse">🐅 🐴</span></td>
-                <td><span class="emoji" aria-label="Dragon">🐉</span></td>
+                <td><span class="emoji" aria-label="Buffalo, Goat, Dragon">🐃 🐐 🐉</span></td>
               </tr>
               <tr>
                 <td>12</td>
                 <td><span class="emoji" aria-hidden="true">🐷</span> Pig</td>
                 <td>Hợi</td>
                 <td><span class="emoji" aria-label="Cat, Goat">🐈 🐐</span></td>
-                <td><span class="emoji" aria-label="Snake">🐍</span></td>
+                <td><span class="emoji" aria-label="Tiger, Monkey, Snake">🐅 🐒 🐍</span></td>
               </tr>
             </tbody>
           </table>
+          </div>
         </section>
       </aside>
     </main>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=3"></script>
   </body>
 </html>
