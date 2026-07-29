@@ -100,7 +100,9 @@ function drawCalendar() {
 
   const dpr = window.devicePixelRatio || 1;
   const cssWidth = Math.min(900, canvas.parentElement.clientWidth || 900);
-  const cssHeight = Math.round(cssWidth * 0.8);
+  // Stacked 3-line cells need a bit more height on narrow screens.
+  const compact = cssWidth < 700;
+  const cssHeight = Math.round(cssWidth * (compact ? 1.05 : 0.8));
   canvas.style.width = `${cssWidth}px`;
   canvas.style.height = `${cssHeight}px`;
   canvas.width = Math.round(cssWidth * dpr);
@@ -109,7 +111,7 @@ function drawCalendar() {
 
   const w = cssWidth;
   const h = cssHeight;
-  const headerH = 36;
+  const headerH = compact ? 28 : 36;
   const cols = 7;
   const rows = 6;
   const cellW = w / cols;
@@ -127,7 +129,7 @@ function drawCalendar() {
 
   // Weekday headers
   ctx.fillStyle = "#4d6158";
-  ctx.font = "600 12px 'Be Vietnam Pro', sans-serif";
+  ctx.font = `600 ${compact ? 10 : 12}px 'Be Vietnam Pro', sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (let c = 0; c < cols; c++) {
@@ -177,27 +179,52 @@ function drawCalendar() {
       : "rgba(29, 42, 36, 0.1)";
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
-    // Gregorian day — top left
-    ctx.fillStyle = "#1d2a24";
-    ctx.font = "700 13px 'Be Vietnam Pro', sans-serif";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText(String(day), x + 8, y + 8);
+    const lunarLabel = `🌙${data.lunarMonth}/${data.lunarDay}`;
+    const stemLabel = `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
 
-    // Crescent + lunar month/day — top right
-    const lunarLabel = `🌙 ${data.lunarMonth}/${data.lunarDay}`;
-    ctx.fillStyle = "#4d6158";
-    ctx.font = "600 11px 'Be Vietnam Pro', sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText(lunarLabel, x + cellW - 8, y + 8);
+    if (compact) {
+      // 3 stacked lines for narrow screens
+      const padX = Math.max(3, cellW * 0.08);
+      const line1 = y + cellH * 0.14;
+      const line2 = y + cellH * 0.42;
+      const line3 = y + cellH * 0.72;
+      const daySize = Math.max(10, Math.min(13, cellW * 0.28));
+      const lunarSize = Math.max(8, Math.min(11, cellW * 0.22));
+      const stemSize = Math.max(11, Math.min(16, cellW * 0.3));
 
-    // Day stem element + animal — center
-    const center = `${ELEMENT_EMOJI[data.dayElement] || ""} ${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
-    ctx.fillStyle = "#1d2a24";
-    ctx.font = `${Math.max(16, Math.min(22, cellW * 0.22))}px 'Be Vietnam Pro', sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(center, x + cellW / 2, y + cellH / 2 + 6);
+      ctx.fillStyle = "#1d2a24";
+      ctx.font = `700 ${daySize}px 'Be Vietnam Pro', sans-serif`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(day), x + padX, line1);
+
+      ctx.fillStyle = "#4d6158";
+      ctx.font = `600 ${lunarSize}px 'Be Vietnam Pro', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(lunarLabel, x + cellW / 2, line2);
+
+      ctx.fillStyle = "#1d2a24";
+      ctx.font = `${stemSize}px 'Be Vietnam Pro', sans-serif`;
+      ctx.fillText(stemLabel, x + cellW / 2, line3);
+    } else {
+      // Wide layout: corners + centered stem
+      ctx.fillStyle = "#1d2a24";
+      ctx.font = "700 13px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillText(String(day), x + 8, y + 8);
+
+      ctx.fillStyle = "#4d6158";
+      ctx.font = "600 11px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(lunarLabel, x + cellW - 8, y + 8);
+
+      ctx.fillStyle = "#1d2a24";
+      ctx.font = `${Math.max(16, Math.min(22, cellW * 0.22))}px 'Be Vietnam Pro', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(stemLabel, x + cellW / 2, y + cellH / 2 + 6);
+    }
   }
 }
 
