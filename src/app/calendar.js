@@ -179,7 +179,7 @@ function drawCalendar() {
       : "rgba(29, 42, 36, 0.1)";
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
-    const lunarLabel = `🌙${data.lunarMonth}/${data.lunarDay}`;
+    const lunarLabel = `🌙${data.lunarDay}/${data.lunarMonth}/${pad2(data.lunarYear % 100)}`;
     const stemLabel = `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
 
     if (compact) {
