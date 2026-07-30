@@ -31,29 +31,61 @@
         <p class="brand-mark">Calendar</p>
         <h1>Month view</h1>
         <p class="lede">
-          Compare two dates, then browse a Gregorian month with lunar day and
-          daily stem markers.
+          This calendar view is for selecting two birth dates, then using the
+          lunar calendar to pick an auspicious day — days whose animal is not a
+          Tứ Hành Xung enemy of either birth year’s animal are highlighted in
+          green.
         </p>
       </header>
 
       <section class="date-pair" aria-label="Compare dates">
         <div class="date-card">
-          <label>
-            <span>Date A</span>
-            <input id="date-a" type="date" required />
-          </label>
-          <p id="stem-a" class="stem-emoji" aria-live="polite"></p>
+          <div class="date-card-fields">
+            <label>
+              <span>Date A</span>
+              <input id="date-a" type="date" required />
+            </label>
+            <label>
+              <span>Hour</span>
+              <input id="hour-a" type="number" min="0" max="23" step="1" required />
+            </label>
+          </div>
+          <!-- <p id="stem-a" class="stem-emoji" aria-live="polite"></p> -->
         </div>
         <div class="date-card">
-          <label>
-            <span>Date B</span>
-            <input id="date-b" type="date" required />
-          </label>
-          <p id="stem-b" class="stem-emoji" aria-live="polite"></p>
+          <div class="date-card-fields">
+            <label>
+              <span>Date B</span>
+              <input id="date-b" type="date" required />
+            </label>
+            <label>
+              <span>Hour</span>
+              <input id="hour-b" type="number" min="0" max="23" step="1" required />
+            </label>
+          </div>
+          <!-- <p id="stem-b" class="stem-emoji" aria-live="polite"></p> -->
         </div>
       </section>
 
+      <table id="compare-pillars" class="pillars pillars--compare" aria-label="Four pillars comparison">
+        <thead>
+          <tr>
+            <th scope="col">Pillar</th>
+            <th scope="col"><span aria-hidden="true">☯️</span> Date A</th>
+            <th scope="col"><span aria-hidden="true">☯️</span> Date B</th>
+            <th scope="col">Element Relation</th>
+            <!--
+            <th scope="col" title="Tam Hợp — Triple Harmony">Tam Hợp</th>
+            <th scope="col" title="Lục Hợp — Six Harmonies">Lục Hợp</th>
+            <th scope="col" title="Lục Xung — Six Opposing Pairs">Lục Xung</th>
+            <th scope="col" title="Tứ Hành Xung — Four Conflict Groups">Tứ Hành Xung</th>-->
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
       <form class="controls controls--month" autocomplete="off">
+
         <label>
           <span>Month</span>
           <input id="view-month" type="number" min="1" max="12" step="1" required />
@@ -62,6 +94,12 @@
           <span>Year</span>
           <input id="view-year" type="number" min="1900" max="2099" step="1" required />
         </label>
+        <button type="button" id="month-prev" class="month-nav-btn" aria-label="Previous month">
+          ◀
+        </button>
+        <button type="button" id="month-next" class="month-nav-btn" aria-label="Next month">
+          ▶
+        </button>
       </form>
 
       <p></p>
@@ -71,6 +109,6 @@
       </div>
       <p id="view-date" aria-live="polite"></p>
     </main>
-    <script type="module" src="./calendar.js?v=4"></script>
+    <script type="module" src="./calendar.js?v=10"></script>
   </body>
 </html>

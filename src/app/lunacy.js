@@ -70,8 +70,57 @@ const TU_HANH_XUNG_GROUPS = [
   ["Tiger", "Monkey", "Snake", "Pig"],
 ];
 
+/**
+ * Tam hợp — triad allies (friends): animals spaced 4 apart.
+ * Friends of an animal are the other members of its triad.
+ */
+const TAM_HOP_GROUPS = [
+  ["Rat", "Dragon", "Monkey"],
+  ["Buffalo", "Snake", "Rooster"],
+  ["Tiger", "Horse", "Dog"],
+  ["Cat", "Goat", "Pig"],
+];
+
+/** Lục Hợp — six harmonious pairs. */
+const LUC_HOP_PAIRS = [
+  ["Rat", "Buffalo"],
+  ["Tiger", "Pig"],
+  ["Cat", "Dog"],
+  ["Dragon", "Rooster"],
+  ["Snake", "Monkey"],
+  ["Horse", "Goat"],
+];
+
+/** Lục Xung — six opposing pairs (direct clash). */
+const LUC_XUNG_PAIRS = [
+  ["Rat", "Horse"],
+  ["Buffalo", "Goat"],
+  ["Tiger", "Monkey"],
+  ["Cat", "Rooster"],
+  ["Dragon", "Dog"],
+  ["Snake", "Pig"],
+];
+
+function pairLookup(pairs) {
+  return Object.fromEntries(
+    pairs.flatMap(([a, b]) => [
+      [a, b],
+      [b, a],
+    ]),
+  );
+}
+
+const LUC_HOP_OF = pairLookup(LUC_HOP_PAIRS);
+const LUC_XUNG_OF = pairLookup(LUC_XUNG_PAIRS);
+
 const ENEMIES_BY_ANIMAL = Object.fromEntries(
   TU_HANH_XUNG_GROUPS.flatMap((group) =>
+    group.map((animal) => [animal, group.filter((other) => other !== animal)]),
+  ),
+);
+
+const FRIENDS_BY_ANIMAL = Object.fromEntries(
+  TAM_HOP_GROUPS.flatMap((group) =>
     group.map((animal) => [animal, group.filter((other) => other !== animal)]),
   ),
 );
@@ -91,9 +140,34 @@ export function enemiesOf(animal) {
   return ENEMIES_BY_ANIMAL[animal] ? [...ENEMIES_BY_ANIMAL[animal]] : [];
 }
 
+/** Other animals in this animal's Tam hợp triad (friends). */
+export function friendsOf(animal) {
+  return FRIENDS_BY_ANIMAL[animal] ? [...FRIENDS_BY_ANIMAL[animal]] : [];
+}
+
 /** True if `candidate` is in the Tứ Hành Xung enemy list of `animal`. */
 export function isEnemyOf(animal, candidate) {
   return (ENEMIES_BY_ANIMAL[animal] || []).includes(candidate);
+}
+
+/** True if both animals share a Tam Hợp triad. */
+export function isTamHop(animalA, animalB) {
+  return (FRIENDS_BY_ANIMAL[animalA] || []).includes(animalB);
+}
+
+/** True if the animals form a Lục Hợp pair. */
+export function isLucHop(animalA, animalB) {
+  return LUC_HOP_OF[animalA] === animalB;
+}
+
+/** True if the animals form a Lục Xung opposing pair. */
+export function isLucXung(animalA, animalB) {
+  return LUC_XUNG_OF[animalA] === animalB;
+}
+
+/** True if both animals share a Tứ Hành Xung conflict group. */
+export function isTuHanhXung(animalA, animalB) {
+  return isEnemyOf(animalA, animalB);
 }
 
 // Chinese/Vietnamese lunar year bitmaps for 1900–2099 (from lunardate)
@@ -277,14 +351,51 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
   return data;
 }
 
-function formatPillar(element, animal) {
+function formatPillar(element, animal, polarity = null) {
+  const polarityEmoji = polarity ? POLARITY_EMOJI[polarity] || "" : "";
   return {
     element,
     animal,
+    polarity: polarity || "",
+    polarityEmoji,
     elementEmoji: ELEMENT_EMOJI[element] || "",
     animalEmoji: ANIMAL_EMOJI[animal] || "",
+    stemEmojis: `${polarityEmoji}${ELEMENT_EMOJI[element] || ""}${ANIMAL_EMOJI[animal] || ""}`,
     label: `${ELEMENT_EMOJI[element] || ""} ${element} · ${ANIMAL_EMOJI[animal] || ""} ${animal}`,
   };
+}
+
+/** Generation cycle: each element produces the next. */
+const GENERATES = {
+  Wood: "Fire",
+  Fire: "Earth",
+  Earth: "Metal",
+  Metal: "Water",
+  Water: "Wood",
+};
+
+/** Control cycle: each element restrains the next. */
+const CONTROLS = {
+  Wood: "Earth",
+  Earth: "Water",
+  Water: "Fire",
+  Fire: "Metal",
+  Metal: "Wood",
+};
+
+/**
+ * Five-element relationship of A toward B.
+ * Returns "A generates B", "B generates A", "A controls B", "B controls A",
+ * "same", or "".
+ */
+function elementRelation(elementA, elementB) {
+  if (!elementA || !elementB) return "";
+  if (elementA === elementB) return "same";
+  if (GENERATES[elementA] === elementB) return "A generates B";
+  if (GENERATES[elementB] === elementA) return "B generates A";
+  if (CONTROLS[elementA] === elementB) return "A controls B";
+  if (CONTROLS[elementB] === elementA) return "B controls A";
+  return "";
 }
 
 export {
@@ -294,8 +405,13 @@ export {
   ANIMAL_EMOJI,
   POLARITY_EMOJI,
   TU_HANH_XUNG_GROUPS,
+  TAM_HOP_GROUPS,
+  LUC_HOP_PAIRS,
+  LUC_XUNG_PAIRS,
   ENEMIES_BY_ANIMAL,
+  FRIENDS_BY_ANIMAL,
   fromSolarDate,
   gregorianToLunarAnimals,
   formatPillar,
+  elementRelation,
 };

@@ -1,21 +1,34 @@
 import {
   gregorianToLunarAnimals,
   formatStemEmojis,
+  formatPillar,
+  elementRelation,
   isEnemyOf,
+  isTamHop,
+  isLucHop,
+  isLucXung,
+  isTuHanhXung,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
-} from "./lunacy.js?v=3";
+} from "./lunacy.js?v=6";
 
 const dateA = document.getElementById("date-a");
 const dateB = document.getElementById("date-b");
+const hourA = document.getElementById("hour-a");
+const hourB = document.getElementById("hour-b");
 const stemA = document.getElementById("stem-a");
 const stemB = document.getElementById("stem-b");
+const compareBody = document.querySelector("#compare-pillars tbody");
 const viewMonth = document.getElementById("view-month");
 const viewYear = document.getElementById("view-year");
 const canvas = document.getElementById("calendar");
 const ctx = canvas.getContext("2d");
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/** Last committed canvas layout; avoid resetting buffer unless it changes. */
+let canvasLayout = { cssW: 0, cssH: 0, dpr: 0 };
+let resizeTimer = null;
 
 function pad2(n) {
   return String(n).padStart(2, "0");
@@ -25,6 +38,14 @@ function parseDateValue(value) {
   const [year, month, day] = value.split("-").map(Number);
   if (!year || !month || !day) throw new Error("Invalid date");
   return { year, month, day };
+}
+
+function parseHourValue(value) {
+  const hour = Number(value);
+  if (!Number.isFinite(hour) || hour < 0 || hour > 23) {
+    throw new Error("Invalid hour");
+  }
+  return Math.trunc(hour);
 }
 
 function yearStemLabel(year, month, day) {
@@ -43,6 +64,73 @@ function updateStem(input, labelEl) {
     labelEl.textContent = yearStemLabel(year, month, day);
   } catch {
     labelEl.textContent = "—";
+  }
+}
+
+function pillarCell(p) {
+  if (!p) return "—";
+  const text = [p.polarity, p.element, p.animal].filter(Boolean).join(" ");
+  return `<div class="pillar-cell">
+    <span class="pillar-cell-emoji" aria-hidden="true">${p.stemEmojis}</span>
+    <span class="pillar-cell-text">${text}</span>
+  </div>`;
+}
+
+/** Good match → green check; no match → yellow neutral. */
+function goodMark(matched, label) {
+  if (matched) {
+    return `<span class="rel-mark rel-mark--good" title="${label}: match" aria-label="${label}: match">✓</span>`;
+  }
+  return `<span class="rel-mark rel-mark--neutral" title="${label}: no match" aria-label="${label}: no match">●</span>`;
+}
+
+/** Bad match → red X; no match → yellow neutral. */
+function badMark(matched, label) {
+  if (matched) {
+    return `<span class="rel-mark rel-mark--bad" title="${label}: clash" aria-label="${label}: clash">✕</span>`;
+  }
+  return `<span class="rel-mark rel-mark--neutral" title="${label}: no clash" aria-label="${label}: no clash">●</span>`;
+}
+
+function datePillars(dateInput, hourInput) {
+  const { year, month, day } = parseDateValue(dateInput.value);
+  const hour = parseHourValue(hourInput.value);
+  const data = gregorianToLunarAnimals(year, month, day, hour, 0);
+  return {
+    Year: formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity),
+    Month: formatPillar(data.monthElement, data.monthAnimal, data.monthPolarity),
+    Day: formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity),
+    Hour: formatPillar(data.hourElement, data.hourAnimal, data.hourPolarity),
+  };
+}
+
+function updateCompareTable() {
+  try {
+    const a = datePillars(dateA, hourA);
+    const b = datePillars(dateB, hourB);
+    const rows = ["Year", "Month", "Day", "Hour"];
+    compareBody.innerHTML = rows
+      .map((name) => {
+        const pa = a[name];
+        const pb = b[name];
+        const relation = elementRelation(pa.element, pb.element);
+        // NOTE: temporarily hide Tam Hợp, Lục Hợp, Lục Xung, Tứ Hành Xung
+        return `
+      <tr>
+        <th scope="row">${name}</th>
+        <td>${pillarCell(pa)}</td>
+        <td>${pillarCell(pb)}</td>
+        <td>${relation || "—"}</td>
+        <!--
+        <td class="rel-cell">${goodMark(isTamHop(pa.animal, pb.animal), "Tam Hợp")}</td>
+        <td class="rel-cell">${goodMark(isLucHop(pa.animal, pb.animal), "Lục Hợp")}</td>
+        <td class="rel-cell">${badMark(isLucXung(pa.animal, pb.animal), "Lục Xung")}</td>
+        <td class="rel-cell">${badMark(isTuHanhXung(pa.animal, pb.animal), "Tứ Hành Xung")}</td>-->
+      </tr>`;
+      })
+      .join("");
+  } catch {
+    compareBody.innerHTML = "";
   }
 }
 
@@ -93,7 +181,39 @@ function viewYearMonth() {
   return { year, month };
 }
 
+/** Resize backing store only when CSS size or DPR actually changes. */
+function ensureCanvasSize(cssWidth, cssHeight, dpr) {
+  const bufW = Math.round(cssWidth * dpr);
+  const bufH = Math.round(cssHeight * dpr);
+  const changed =
+    canvasLayout.cssW !== cssWidth ||
+    canvasLayout.cssH !== cssHeight ||
+    canvasLayout.dpr !== dpr ||
+    canvas.width !== bufW ||
+    canvas.height !== bufH;
+
+  if (changed) {
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
+    canvas.width = bufW;
+    canvas.height = bufH;
+    canvasLayout = { cssW: cssWidth, cssH: cssHeight, dpr };
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return changed;
+}
+
+function clearResizeTimer() {
+  if (resizeTimer !== null) {
+    clearTimeout(resizeTimer);
+    resizeTimer = null;
+  }
+}
+
 function drawCalendar() {
+  // A real redraw cancels any pending debounced resize.
+  clearResizeTimer();
+
   const view = viewYearMonth();
   if (!view) return;
   const { year, month } = view;
@@ -103,11 +223,7 @@ function drawCalendar() {
   // Stacked 3-line cells need a bit more height on narrow screens.
   const compact = cssWidth < 700;
   const cssHeight = Math.round(cssWidth * (compact ? 1.05 : 0.8));
-  canvas.style.width = `${cssWidth}px`;
-  canvas.style.height = `${cssHeight}px`;
-  canvas.width = Math.round(cssWidth * dpr);
-  canvas.height = Math.round(cssHeight * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ensureCanvasSize(cssWidth, cssHeight, dpr);
 
   const w = cssWidth;
   const h = cssHeight;
@@ -179,8 +295,10 @@ function drawCalendar() {
       : "rgba(29, 42, 36, 0.1)";
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
-    const lunarLabel = `🌙${data.lunarDay}/${data.lunarMonth}/${pad2(data.lunarYear % 100)}`;
+    const lunarLabel = `🌙${data.lunarDay}/${data.lunarMonth}`; // /${pad2(data.lunarYear % 100)}
     const stemLabel = `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
+    const dayLabel =
+      year === 2025 && month === 10 && day === 2 ? `${day} 💒` : String(day);
 
     if (compact) {
       // 3 stacked lines for narrow screens
@@ -196,7 +314,7 @@ function drawCalendar() {
       ctx.font = `700 ${daySize}px 'Be Vietnam Pro', sans-serif`;
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
-      ctx.fillText(String(day), x + padX, line1);
+      ctx.fillText(dayLabel, x + padX, line1);
 
       ctx.fillStyle = "#4d6158";
       ctx.font = `600 ${lunarSize}px 'Be Vietnam Pro', sans-serif`;
@@ -212,7 +330,7 @@ function drawCalendar() {
       ctx.font = "700 13px 'Be Vietnam Pro', sans-serif";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
-      ctx.fillText(String(day), x + 8, y + 8);
+      ctx.fillText(dayLabel, x + 8, y + 8);
 
       ctx.fillStyle = "#4d6158";
       ctx.font = "600 11px 'Be Vietnam Pro', sans-serif";
@@ -240,23 +358,55 @@ function roundRect(c, x, y, width, height, r) {
 }
 
 function refresh() {
-  updateStem(dateA, stemA);
-  updateStem(dateB, stemB);
+  //updateStem(dateA, stemA);
+  //updateStem(dateB, stemB);
+  updateCompareTable();
   drawCalendar();
 }
 
 function setDefaults() {
   dateA.value = "1990-03-12";
   dateB.value = "1992-04-20";
+  hourA.value = "12";
+  hourB.value = "7";
   viewMonth.value = "10";
   viewYear.value = "2025";
 }
 
-for (const el of [dateA, dateB, viewMonth, viewYear]) {
+function shiftMonth(delta) {
+  const view = viewYearMonth();
+  if (!view) return;
+  let { year, month } = view;
+  month += delta;
+  while (month < 1) {
+    month += 12;
+    year -= 1;
+  }
+  while (month > 12) {
+    month -= 12;
+    year += 1;
+  }
+  year = Math.min(2099, Math.max(1900, year));
+  viewMonth.value = String(month);
+  viewYear.value = String(year);
+  refresh();
+}
+
+for (const el of [dateA, dateB, hourA, hourB, viewMonth, viewYear]) {
   el.addEventListener("input", refresh);
   el.addEventListener("change", refresh);
 }
-window.addEventListener("resize", drawCalendar);
+document.getElementById("month-prev").addEventListener("click", () => shiftMonth(-1));
+document.getElementById("month-next").addEventListener("click", () => shiftMonth(1));
+
+window.addEventListener("resize", () => {
+  // Trailing debounce: each resize resets the timer; draw 200ms after the last one.
+  clearResizeTimer();
+  resizeTimer = setTimeout(() => {
+    resizeTimer = null;
+    drawCalendar();
+  }, 200);
+});
 
 setDefaults();
 refresh();
