@@ -31,10 +31,10 @@
         <p class="brand-mark">Calendar</p>
         <h1>Month view</h1>
         <p class="lede">
-          This calendar view is for selecting two birth dates, then using the
-          lunar calendar to pick an auspicious day — days whose animal is not a
-          Tứ Hành Xung enemy of either birth year’s animal are highlighted in
-          green.
+          Select two birth dates, then browse months to find wedding-day
+          candidates. Use the filters below to exclude traditionally unfavorable
+          days (red). Remaining <strong>Hắc Đạo</strong> days are marked yellow,
+          and <strong>Hoàng Đạo</strong> days green.
         </p>
       </header>
 
@@ -84,8 +84,244 @@
         <tbody></tbody>
       </table>
 
-      <form class="controls controls--month" autocomplete="off">
+      <aside class="day-guide" aria-labelledby="day-guide-title">
+        <h2 id="day-guide-title">Choosing an auspicious day</h2>
+        <p class="appendix-lede">
+          Traditional wedding-date selection often begins by removing clearly
+          unfavorable days, then favoring days that support the couple’s signs.
+          The filters below are the main exclusion and preference rules used
+          with this calendar.
+        </p>
 
+        <section class="appendix-block" aria-labelledby="nam-tuoi-title">
+          <h3 id="nam-tuoi-title">Năm Tuổi</h3>
+          <p class="appendix-lede">
+            <strong>Năm Tuổi (Birth-Zodiac Year)</strong> occurs when the zodiac
+            animal of the current lunar year is the same as a person's birth-year
+            zodiac. Because the twelve Earthly Branches repeat every twelve years,
+            a Năm Tuổi returns at twelve-year intervals and is traditionally
+            regarded as a period of heightened change or uncertainty. For
+            important life events such as marriage, some Vietnamese families
+            therefore prefer to avoid a year that is the Năm Tuổi of either the
+            bride or groom.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="ghost-month-title">
+          <h3 id="ghost-month-title">Ghost Month</h3>
+          <p class="appendix-lede">
+            The <strong>Ghost Month (Tháng Cô Hồn)</strong> traditionally refers
+            to the <strong>seventh month of the Vietnamese lunar calendar</strong>,
+            a period associated with wandering spirits and remembrance of the
+            dead. The month reaches its spiritual height around the
+            <strong>15th lunar day</strong>, during
+            <strong>Rằm Tháng Bảy</strong>, when families make offerings to
+            ancestors and wandering spirits and observe the Buddhist festival of
+            <strong>Vu Lan</strong>. Because the month is traditionally regarded
+            as a spiritually unsettled time, many Vietnamese families avoid
+            beginning major undertakings such as weddings, moving into a new
+            home, opening a business, or making significant purchases. For
+            traditional wedding-date selection, the entire seventh lunar month
+            may therefore be excluded or treated as strongly unfavorable,
+            although customs and the degree of observance vary among families
+            and regions.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="tam-nuong-title">
+          <h3 id="tam-nuong-title">Tam Nương</h3>
+          <p class="appendix-lede">
+            <strong>Tam Nương (三娘)</strong>, meaning “Three Ladies,” refers to
+            a set of traditionally inauspicious days that occur every month in
+            the Vietnamese lunar calendar. The
+            <strong>3rd, 7th, 13th, 18th, 22nd, and 27th lunar days</strong> are
+            designated as Tam Nương days and are commonly avoided when choosing
+            dates for important beginnings, particularly weddings, construction,
+            moving, business openings, and major journeys. The tradition is
+            popularly associated with three legendary women—
+            <strong>Muội Hỷ, Đát Kỷ, and Bao Tự</strong>—whose stories became
+            symbols of disruption and misfortune. In traditional date selection,
+            a Tam Nương designation therefore acts as a warning against beginning
+            an important undertaking on that day, even when other characteristics
+            of the date may appear favorable.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="nguyet-ky-title">
+          <h3 id="nguyet-ky-title">Nguyệt Kỵ</h3>
+          <p class="appendix-lede">
+            <strong>Nguyệt Kỵ (月忌)</strong>, meaning “Monthly Taboo,” refers to
+            three traditionally inauspicious dates that occur in every month of
+            the Vietnamese lunar calendar: the
+            <strong>5th, 14th, and 23rd lunar days</strong>. These dates have
+            long been regarded as unfavorable for important beginnings and major
+            undertakings, particularly weddings, long journeys, business
+            transactions, construction, and other significant events. Unlike
+            classifications based on the Heavenly Stems or Earthly Branches,
+            Nguyệt Kỵ is determined solely by the
+            <strong>numbered day of the lunar month</strong>, making it one of
+            the simplest traditional almanac rules to identify. In date
+            selection, these three dates are therefore commonly avoided even
+            when other characteristics of the day appear favorable.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="taboo-days-title">
+          <h3 id="taboo-days-title">Taboo Almanac Days</h3>
+          <p class="appendix-lede">
+            <strong>Major Taboo Almanac Days</strong> are dates traditionally
+            regarded as particularly unfavorable within the Vietnamese lunar
+            calendar and are generally avoided when planning important events.
+            These designations come from traditional almanac systems that
+            evaluate the lunar month, day, and calendrical cycles to identify
+            periods associated with obstruction, loss, instability, or an
+            unfavorable beginning. Because weddings represent the beginning of a
+            new household and family life, dates carrying a major taboo are
+            typically removed from consideration before more favorable qualities
+            of the remaining dates are evaluated. In this way, taboo days
+            function as an initial <strong>exclusionary filter</strong> rather
+            than simply a negative factor to be balanced against otherwise
+            auspicious characteristics.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="conflicting-signs-title">
+          <h3 id="conflicting-signs-title">Conflicting Signs</h3>
+          <p class="appendix-lede">
+            Remove days whose lunar-day Earthly Branch directly opposes the year
+            Earthly Branch of either person.
+          </p>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="hac-dao-title">
+          <h3 id="hac-dao-title">Hắc Đạo</h3>
+          <p class="appendix-lede">
+            <strong>Hắc Đạo (黑道)</strong>, literally the “Black Path,” refers
+            to days considered generally inauspicious within the traditional
+            Vietnamese almanac and forms the counterpart to
+            <strong>Hoàng Đạo</strong>. A Hắc Đạo day is governed by one of six
+            unfavorable celestial spirits:
+            <strong>Thiên Hình (天刑), Heavenly Punishment</strong>, associated
+            with punishment and conflict;
+            <strong>Chu Tước (朱雀), the Vermilion Bird</strong>, associated with
+            disputes and discord;
+            <strong>Bạch Hổ (白虎), the White Tiger</strong>, associated with
+            danger and injury;
+            <strong>Thiên Lao (天牢), Heavenly Prison</strong>, associated with
+            restriction and obstruction;
+            <strong>Huyền Vũ (玄武), the Dark Warrior</strong>, associated with
+            secrecy, deception, and uncertainty; and
+            <strong>Câu Trần (勾陳), Gouchen</strong>, associated with
+            entanglement, delay, and difficulty. Like Hoàng Đạo, the governing
+            spirit is determined by the relationship between the
+            <strong>lunar month and the Earthly Branch of the day</strong>. Hắc
+            Đạo days are generally avoided for important beginnings such as
+            weddings, although they are best understood as an unfavorable
+            almanac classification rather than an absolute prohibition.
+          </p>
+          <table class="ref-table" aria-label="Hắc Đạo day animals by lunar month">
+            <thead>
+              <tr>
+                <th scope="col">Lunar months</th>
+                <th scope="col">Day animals</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 &amp; 7</td>
+                <td><span class="emoji" aria-label="Tiger, Cat, Horse, Monkey, Rooster, Pig">🐅 🐈 🐴 🐒 🐓 🐷</span></td>
+              </tr>
+              <tr>
+                <td>2 &amp; 8</td>
+                <td><span class="emoji" aria-label="Dragon, Snake, Monkey, Dog, Pig, Buffalo">🐉 🐍 🐒 🐕 🐷 🐃</span></td>
+              </tr>
+              <tr>
+                <td>3 &amp; 9</td>
+                <td><span class="emoji" aria-label="Horse, Goat, Dog, Rat, Buffalo, Cat">🐴 🐐 🐕 🐀 🐃 🐈</span></td>
+              </tr>
+              <tr>
+                <td>4 &amp; 10</td>
+                <td><span class="emoji" aria-label="Monkey, Rooster, Rat, Tiger, Cat, Snake">🐒 🐓 🐀 🐅 🐈 🐍</span></td>
+              </tr>
+              <tr>
+                <td>5 &amp; 11</td>
+                <td><span class="emoji" aria-label="Dog, Pig, Tiger, Dragon, Snake, Goat">🐕 🐷 🐅 🐉 🐍 🐐</span></td>
+              </tr>
+              <tr>
+                <td>6 &amp; 12</td>
+                <td><span class="emoji" aria-label="Rat, Buffalo, Dragon, Horse, Goat, Rooster">🐀 🐃 🐉 🐴 🐐 🐓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="appendix-block" aria-labelledby="hoang-dao-title">
+          <h3 id="hoang-dao-title">Hoàng Đạo</h3>
+          <p class="appendix-lede">
+            <strong>Hoàng Đạo (黃道)</strong>, literally the “Yellow Path,”
+            refers to days considered generally auspicious within the traditional
+            Vietnamese almanac. Each day is associated with one of a cycle of
+            celestial spirits, six of which are regarded as favorable:
+            <strong>Thanh Long (青龍), the Azure Dragon</strong>, associated with
+            success and favorable beginnings;
+            <strong>Minh Đường (明堂), the Bright Hall</strong>, associated with
+            clarity and prosperity;
+            <strong>Kim Quỹ (金匱), the Golden Coffer</strong>, associated with
+            wealth, resources, and preservation;
+            <strong>Thiên Đức (天德), Heavenly Virtue</strong>, associated with
+            protection, benevolence, and good fortune;
+            <strong>Ngọc Đường (玉堂), the Jade Hall</strong>, associated with
+            harmony, celebration, and favorable relationships; and
+            <strong>Tư Mệnh (司命), the Controller of Destiny</strong>, associated
+            with life, well-being, and the orderly course of affairs. A day
+            governed by one of these six auspicious spirits is classified as a
+            <strong>Hoàng Đạo day</strong> and is generally preferred for
+            important occasions. The governing spirit is determined from the
+            relationship between the
+            <strong>lunar month and the Earthly Branch of the day</strong>,
+            rather than from the person's zodiac or Nạp Âm. For wedding-date
+            selection, Hoàng Đạo provides a strong positive indication, although
+            the date should still be checked against major taboo days and
+            conflicts with the couple.
+          </p>
+          <table class="ref-table" aria-label="Hoàng Đạo day animals by lunar month">
+            <thead>
+              <tr>
+                <th scope="col">Lunar months</th>
+                <th scope="col">Day animals</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 &amp; 7</td>
+                <td><span class="emoji" aria-label="Rat, Buffalo, Snake, Goat">🐀 🐃 🐍 🐐</span></td>
+              </tr>
+              <tr>
+                <td>2 &amp; 8</td>
+                <td><span class="emoji" aria-label="Tiger, Cat, Goat, Rooster">🐅 🐈 🐐 🐓</span></td>
+              </tr>
+              <tr>
+                <td>3 &amp; 9</td>
+                <td><span class="emoji" aria-label="Dragon, Snake, Rooster, Pig">🐉 🐍 🐓 🐷</span></td>
+              </tr>
+              <tr>
+                <td>4 &amp; 10</td>
+                <td><span class="emoji" aria-label="Horse, Goat, Buffalo, Rooster">🐴 🐐 🐃 🐓</span></td>
+              </tr>
+              <tr>
+                <td>5 &amp; 11</td>
+                <td><span class="emoji" aria-label="Monkey, Rooster, Buffalo, Cat">🐒 🐓 🐃 🐈</span></td>
+              </tr>
+              <tr>
+                <td>6 &amp; 12</td>
+                <td><span class="emoji" aria-label="Dog, Pig, Cat, Snake">🐕 🐷 🐈 🐍</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </aside>
+
+      <form class="controls controls--month" autocomplete="off">
         <label>
           <span>Month</span>
           <input id="view-month" type="number" min="1" max="12" step="1" required />
@@ -100,15 +336,44 @@
         <button type="button" id="month-next" class="month-nav-btn" aria-label="Next month">
           ▶
         </button>
+        <fieldset class="rule-filters" aria-label="Day exclusion filters">
+          <legend>Filters</legend>
+          <label class="rule-check">
+            <input id="rule-nam-tuoi" type="checkbox" checked />
+            <span>Exclude Năm Tuổi</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-ghost" type="checkbox" checked />
+            <span>Exclude Ghost Month</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-tam-nuong" type="checkbox" checked />
+            <span>Exclude Tam Nương</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-nguyet-ky" type="checkbox" checked />
+            <span>Exclude Nguyệt Kỵ</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-taboo" type="checkbox" checked />
+            <span>Exclude Taboo Almanac Days</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-conflict" type="checkbox" checked />
+            <span>Exclude Conflicting Signs</span>
+          </label>
+          <label class="rule-check">
+            <input id="rule-hac-dao" type="checkbox" checked />
+            <span>Mark Hắc Đạo</span>
+          </label>
+        </fieldset>
       </form>
 
-      <p></p>
-      <p></p>
       <div class="calendar-wrap">
         <canvas id="calendar" width="900" height="720" aria-label="Month calendar"></canvas>
       </div>
       <p id="view-date" aria-live="polite"></p>
     </main>
-    <script type="module" src="./calendar.js?v=12"></script>
+    <script type="module" src="./calendar.js?v=17"></script>
   </body>
 </html>

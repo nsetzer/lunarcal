@@ -3,14 +3,14 @@ import {
   formatStemEmojis,
   formatPillar,
   elementRelation,
-  isEnemyOf,
   isTamHop,
   isLucHop,
   isLucXung,
   isTuHanhXung,
+  LUC_XUNG_PAIRS,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
-} from "./lunacy.js?v=8";
+} from "./lunacy.js?v=11";
 
 const dateA = document.getElementById("date-a");
 const dateB = document.getElementById("date-b");
@@ -21,10 +21,71 @@ const stemB = document.getElementById("stem-b");
 const compareBody = document.querySelector("#compare-pillars tbody");
 const viewMonth = document.getElementById("view-month");
 const viewYear = document.getElementById("view-year");
+const ruleNamTuoi = document.getElementById("rule-nam-tuoi");
+const ruleGhost = document.getElementById("rule-ghost");
+const ruleTamNuong = document.getElementById("rule-tam-nuong");
+const ruleNguyetKy = document.getElementById("rule-nguyet-ky");
+const ruleTaboo = document.getElementById("rule-taboo");
+const ruleConflict = document.getElementById("rule-conflict");
+const ruleHacDao = document.getElementById("rule-hac-dao");
 const canvas = document.getElementById("calendar");
 const ctx = canvas.getContext("2d");
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const TAM_NUONG_DAYS = new Set([3, 7, 13, 18, 22, 27]);
+const NGUYET_KY_DAYS = new Set([5, 14, 23]);
+/** Lunar month → taboo lunar day (Dương Công Kỵ Nhật style). */
+const TABOO_DAY_BY_MONTH = {
+  1: 13,
+  2: 11,
+  3: 9,
+  4: 7,
+  5: 5,
+  6: 3,
+  7: 8,
+  8: 6,
+  9: 4,
+  10: 2,
+  11: 27,
+  12: 25,
+};
+/** Hoàng Đạo day-branches by lunar month. */
+const HOANG_DAO_BY_MONTH = {
+  1: ["Rat", "Buffalo", "Snake", "Goat"],
+  7: ["Rat", "Buffalo", "Snake", "Goat"],
+  2: ["Tiger", "Cat", "Goat", "Rooster"],
+  8: ["Tiger", "Cat", "Goat", "Rooster"],
+  3: ["Dragon", "Snake", "Rooster", "Pig"],
+  9: ["Dragon", "Snake", "Rooster", "Pig"],
+  4: ["Horse", "Goat", "Buffalo", "Rooster"],
+  10: ["Horse", "Goat", "Buffalo", "Rooster"],
+  5: ["Monkey", "Rooster", "Buffalo", "Cat"],
+  11: ["Monkey", "Rooster", "Buffalo", "Cat"],
+  6: ["Dog", "Pig", "Cat", "Snake"],
+  12: ["Dog", "Pig", "Cat", "Snake"],
+};
+/** Hắc Đạo day-branches by lunar month (caution, not hard exclusion). */
+const HAC_DAO_BY_MONTH = {
+  1: ["Tiger", "Cat", "Horse", "Monkey", "Rooster", "Pig"],
+  7: ["Tiger", "Cat", "Horse", "Monkey", "Rooster", "Pig"],
+  2: ["Dragon", "Snake", "Monkey", "Dog", "Pig", "Buffalo"],
+  8: ["Dragon", "Snake", "Monkey", "Dog", "Pig", "Buffalo"],
+  3: ["Horse", "Goat", "Dog", "Rat", "Buffalo", "Cat"],
+  9: ["Horse", "Goat", "Dog", "Rat", "Buffalo", "Cat"],
+  4: ["Monkey", "Rooster", "Rat", "Tiger", "Cat", "Snake"],
+  10: ["Monkey", "Rooster", "Rat", "Tiger", "Cat", "Snake"],
+  5: ["Dog", "Pig", "Tiger", "Dragon", "Snake", "Goat"],
+  11: ["Dog", "Pig", "Tiger", "Dragon", "Snake", "Goat"],
+  6: ["Rat", "Buffalo", "Dragon", "Horse", "Goat", "Rooster"],
+  12: ["Rat", "Buffalo", "Dragon", "Horse", "Goat", "Rooster"],
+};
+const LUC_XUNG_OF = Object.fromEntries(
+  LUC_XUNG_PAIRS.flatMap(([a, b]) => [
+    [a, b],
+    [b, a],
+  ]),
+);
 
 /** Last committed canvas layout; avoid resetting buffer unless it changes. */
 let canvasLayout = { cssW: 0, cssH: 0, dpr: 0 };
@@ -96,6 +157,7 @@ function destinyCell(element, destiny) {
   if (!destiny) return "—";
   const emoji = ELEMENT_EMOJI[element] || "";
   return `<div class="pillar-cell">
+    <span class="pillar-cell-emoji" aria-hidden="true">${emoji} ${element}</span>
     <span class="pillar-cell-text">${destiny}</span>
   </div>`;
 }
@@ -105,7 +167,10 @@ function datePillars(dateInput, hourInput) {
   const hour = parseHourValue(hourInput.value);
   const data = gregorianToLunarAnimals(year, month, day, hour, 0);
   return {
-    destiny: { element: data.yearElement, destiny: data.yearElementDestiny },
+    destiny: {
+      element: data.yearDestinyElement,
+      destiny: data.yearElementDestiny,
+    },
     Year: formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity),
     Month: formatPillar(data.monthElement, data.monthAnimal, data.monthPolarity),
     Day: formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity),
@@ -186,6 +251,120 @@ function selectedYearAnimals() {
     }
   }
   return animals;
+}
+
+/** Direct Lục Xung opposites of either selected birth-year animal. */
+function conflictingDayAnimals() {
+  const banned = new Set();
+  for (const animal of selectedYearAnimals()) {
+    const opposite = LUC_XUNG_OF[animal];
+    if (opposite) banned.add(opposite);
+  }
+  return banned;
+}
+
+function activeRules() {
+  return {
+    namTuoi: Boolean(ruleNamTuoi?.checked),
+    ghost: Boolean(ruleGhost?.checked),
+    tamNuong: Boolean(ruleTamNuong?.checked),
+    nguyetKy: Boolean(ruleNguyetKy?.checked),
+    taboo: Boolean(ruleTaboo?.checked),
+    conflict: Boolean(ruleConflict?.checked),
+    hacDao: Boolean(ruleHacDao?.checked),
+  };
+}
+
+/**
+ * Classify a lunar day under active filters.
+ * Hard exclusions first, then Hắc Đạo (caution), then Hoàng Đạo (preferred).
+ */
+function classifyDay(data, rules, conflictAnimals, birthYearAnimals) {
+  const checks = [
+    {
+      id: "namTuoi",
+      enabled: rules.namTuoi,
+      hit: birthYearAnimals.includes(data.yearAnimal),
+      emoji: "🔁",
+      exclude: true,
+    },
+    {
+      id: "ghost",
+      enabled: rules.ghost,
+      hit: data.lunarMonth === 7,
+      emoji: "👻",
+      exclude: true,
+    },
+    {
+      id: "tamNuong",
+      enabled: rules.tamNuong,
+      hit: TAM_NUONG_DAYS.has(data.lunarDay),
+      emoji: "🧙‍♀️",
+      exclude: true,
+    },
+    {
+      id: "nguyetKy",
+      enabled: rules.nguyetKy,
+      hit: NGUYET_KY_DAYS.has(data.lunarDay),
+      emoji: "5️⃣",
+      exclude: true,
+    },
+    {
+      id: "taboo",
+      enabled: rules.taboo,
+      hit: TABOO_DAY_BY_MONTH[data.lunarMonth] === data.lunarDay,
+      emoji: "⚠️",
+      exclude: true,
+    },
+    {
+      id: "conflict",
+      enabled: rules.conflict,
+      hit: conflictAnimals.has(data.dayAnimal),
+      emoji: "⚔️",
+      exclude: true,
+    },
+  ];
+
+  for (const rule of checks) {
+    if (rule.enabled && rule.hit) {
+      return {
+        excluded: true,
+        hacDao: false,
+        hoangDao: false,
+        emoji: rule.emoji,
+        rule: rule.id,
+      };
+    }
+  }
+
+  const hacList = HAC_DAO_BY_MONTH[data.lunarMonth] || [];
+  if (rules.hacDao && hacList.includes(data.dayAnimal)) {
+    return {
+      excluded: false,
+      hacDao: true,
+      hoangDao: false,
+      emoji: "☁️",
+      rule: "hacDao",
+    };
+  }
+
+  const hoangList = HOANG_DAO_BY_MONTH[data.lunarMonth] || [];
+  if (hoangList.includes(data.dayAnimal)) {
+    return {
+      excluded: false,
+      hacDao: false,
+      hoangDao: true,
+      emoji: "🌟",
+      rule: "hoangDao",
+    };
+  }
+  return {
+    excluded: false,
+    hacDao: false,
+    hoangDao: false,
+    emoji: "🌙",
+    rule: null,
+  };
 }
 
 function viewYearMonth() {
@@ -273,7 +452,9 @@ function drawCalendar() {
   const totalDays = daysInMonth(year, month);
   const startCol = mondayIndex(year, month, 1);
   const highlights = selectedKeys();
-  const yearAnimals = selectedYearAnimals();
+  const rules = activeRules();
+  const conflictAnimals = conflictingDayAnimals();
+  const birthYearAnimals = selectedYearAnimals();
 
   for (let day = 1; day <= totalDays; day++) {
     const idx = startCol + day - 1;
@@ -291,14 +472,18 @@ function drawCalendar() {
 
     const key = `${year}-${pad2(month)}-${pad2(day)}`;
     const isHighlight = highlights.has(key);
-    // Green when this day's animal is not a Tứ Hành Xung enemy of either
-    // selected date's year animal.
-    const isFriendly =
-      yearAnimals.length > 0 &&
-      !yearAnimals.some((yearAnimal) => isEnemyOf(yearAnimal, data.dayAnimal));
+    const mark = classifyDay(data, rules, conflictAnimals, birthYearAnimals);
 
-    // Cell
-    if (isFriendly) {
+    // Cell fill: excluded = red; Hắc Đạo = yellow; Hoàng Đạo = green.
+    if (mark.excluded) {
+      ctx.fillStyle = isHighlight
+        ? "rgba(192, 69, 58, 0.42)"
+        : "rgba(192, 69, 58, 0.28)";
+    } else if (mark.hacDao) {
+      ctx.fillStyle = isHighlight
+        ? "rgba(212, 160, 23, 0.45)"
+        : "rgba(212, 160, 23, 0.32)";
+    } else if (mark.hoangDao) {
       ctx.fillStyle = isHighlight
         ? "rgba(46, 140, 90, 0.42)"
         : "rgba(72, 168, 110, 0.32)";
@@ -308,12 +493,16 @@ function drawCalendar() {
       ctx.fillStyle = "transparent";
     }
     ctx.fillRect(x + 1, y + 1, cellW - 2, cellH - 2);
-    ctx.strokeStyle = isFriendly
-      ? "rgba(46, 120, 80, 0.35)"
-      : "rgba(29, 42, 36, 0.1)";
+    ctx.strokeStyle = mark.excluded
+      ? "rgba(160, 50, 42, 0.4)"
+      : mark.hacDao
+        ? "rgba(180, 130, 20, 0.4)"
+        : mark.hoangDao
+          ? "rgba(46, 120, 80, 0.35)"
+          : "rgba(29, 42, 36, 0.1)";
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
-    const lunarLabel = `🌙${data.lunarDay}/${data.lunarMonth}`; // /${pad2(data.lunarYear % 100)}
+    const lunarLabel = `${mark.emoji}${data.lunarDay}/${data.lunarMonth}`;
     const stemLabel = `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
     const dayLabel =
       year === 2025 && month === 10 && day === 2 ? `${day} 💒` : String(day);
@@ -410,7 +599,22 @@ function shiftMonth(delta) {
   refresh();
 }
 
-for (const el of [dateA, dateB, hourA, hourB, viewMonth, viewYear]) {
+for (const el of [
+  dateA,
+  dateB,
+  hourA,
+  hourB,
+  viewMonth,
+  viewYear,
+  ruleNamTuoi,
+  ruleGhost,
+  ruleTamNuong,
+  ruleNguyetKy,
+  ruleTaboo,
+  ruleConflict,
+  ruleHacDao,
+]) {
+  if (!el) continue;
   el.addEventListener("input", refresh);
   el.addEventListener("change", refresh);
 }

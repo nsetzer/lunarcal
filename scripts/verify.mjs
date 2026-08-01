@@ -9,8 +9,10 @@ const cases = [
       lunarYear: 2027,
       lunarMonth: 6,
       lunarDay: 21,
-      yearElement: "Water",
+      yearElement: "Fire",
       yearAnimal: "Goat",
+      yearDestinyElement: "Water",
+      yearElementDestiny: "Water from the Heavenly River",
       monthElement: "Earth",
       monthAnimal: "Goat",
       dayElement: "Water",
@@ -22,8 +24,10 @@ const cases = [
   {
     input: [2025, 10, 2, 4, 15],
     expect: {
-      yearElement: "Fire",
+      yearElement: "Wood",
       yearAnimal: "Snake",
+      yearDestinyElement: "Fire",
+      yearElementDestiny: "Lamp Fire",
       monthElement: "Metal",
       monthAnimal: "Rooster",
       dayElement: "Water",
@@ -35,8 +39,10 @@ const cases = [
   {
     input: [1990, 3, 12, 12, 17],
     expect: {
-      yearElement: "Earth",
+      yearElement: "Metal",
       yearAnimal: "Horse",
+      yearDestinyElement: "Earth",
+      yearElementDestiny: "Roadside Earth",
       monthElement: "Wood",
       monthAnimal: "Cat",
       dayElement: "Wood",

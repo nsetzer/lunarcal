@@ -18,7 +18,7 @@ ZODIAC = [
 ]
 
 # Five Elements (Wu Xing) - cycles every 10 years/months/days
-# Used for month/day/hour stems. Year pillars use Nạp Âm (see below).
+# Heavenly-stem elements for year/month/day/hour pillars (Chinese rotation).
 ELEMENTS = [
     "Wood",     # Mộc
     "Wood",     # Mộc
@@ -32,48 +32,55 @@ ELEMENTS = [
     "Water"     # Thủy
 ]
 
-# Vietnamese Nạp Âm year elements (Tet / Can Chi mệnh), base year 1960.
-# Distinct from Chinese Heavenly-Stem elements — e.g. 1990 is Earth Horse, not Metal.
-# Mirrors src/lunacy/fengshui.py NAP_AM_CYCLE element column.
+# Vietnamese Nạp Âm elemental destiny (base year 1960).
+# Separate from pillar stem elements — e.g. 1990 pillar is Metal Horse,
+# while Nạp Âm destiny is Roadside Earth.
+# Mirrors src/lunacy/fengshui.py NAP_AM_CYCLE.
 TET_YEAR_BASE = 1960
-NAP_AM_ELEMENTS = [
-    "Earth",  # 1960–61  Earth on the Wall
-    "Metal",  # 1962–63  Refined Gold
-    "Fire",   # 1964–65  Lamp Fire
-    "Water",  # 1966–67  Water from the Heavenly River
-    "Earth",  # 1968–69  Great Marsh Earth
-    "Metal",  # 1970–71  Jewelry Gold
-    "Wood",   # 1972–73  Mulberry Wood
-    "Water",  # 1974–75  Great Stream Water
-    "Earth",  # 1976–77  Sand Earth
-    "Fire",   # 1978–79  Fire Above the Sky
-    "Wood",   # 1980–81  Pomegranate Wood
-    "Water",  # 1982–83  Great Sea Water
-    "Metal",  # 1984–85  Gold in the Sea
-    "Fire",   # 1986–87  Fire in the Furnace
-    "Wood",   # 1988–89  Great Forest Wood
-    "Earth",  # 1990–91  Roadside Earth
-    "Metal",  # 1992–93  Sword Edge Metal
-    "Fire",   # 1994–95  Mountain Peak Fire
-    "Water",  # 1996–97  Stream Water
-    "Earth",  # 1998–99  Wall Earth
-    "Metal",  # 2000–01  White Wax Metal
-    "Wood",   # 2002–03  Willow Wood
-    "Water",  # 2004–05  Spring Water
-    "Earth",  # 2006–07  Roof Tile Earth
-    "Fire",   # 2008–09  Thunderbolt Fire
-    "Wood",   # 2010–11  Pine and Cypress Wood
-    "Water",  # 2012–13  Long Flowing Water
-    "Metal",  # 2014–15  Sand Gold
-    "Fire",   # 2016–17  Mountain-Foot Fire
-    "Wood",   # 2018–19  Plain Wood
+NAP_AM_CYCLE = [
+    ("Earth", "Earth on the Wall"),
+    ("Metal", "Refined Gold"),
+    ("Fire", "Lamp Fire"),
+    ("Water", "Water from the Heavenly River"),
+    ("Earth", "Great Marsh Earth"),
+    ("Metal", "Jewelry Gold"),
+    ("Wood", "Mulberry Wood"),
+    ("Water", "Great Stream Water"),
+    ("Earth", "Sand Earth"),
+    ("Fire", "Fire Above the Sky"),
+    ("Wood", "Pomegranate Wood"),
+    ("Water", "Great Sea Water"),
+    ("Metal", "Gold in the Sea"),
+    ("Fire", "Fire in the Furnace"),
+    ("Wood", "Great Forest Wood"),
+    ("Earth", "Roadside Earth"),
+    ("Metal", "Sword Edge Metal"),
+    ("Fire", "Mountain Peak Fire"),
+    ("Water", "Stream Water"),
+    ("Earth", "Wall Earth"),
+    ("Metal", "White Wax Metal"),
+    ("Wood", "Willow Wood"),
+    ("Water", "Spring Water"),
+    ("Earth", "Roof Tile Earth"),
+    ("Fire", "Thunderbolt Fire"),
+    ("Wood", "Pine and Cypress Wood"),
+    ("Water", "Long Flowing Water"),
+    ("Metal", "Sand Gold"),
+    ("Fire", "Mountain-Foot Fire"),
+    ("Wood", "Plain Wood"),
 ]
+NAP_AM_ELEMENTS = [element for element, _ in NAP_AM_CYCLE]
+
+
+def tet_year_nap_am(lunar_year: int) -> tuple[str, str]:
+    """Nạp Âm element + destiny name for a lunar year."""
+    offset = lunar_year - TET_YEAR_BASE
+    return NAP_AM_CYCLE[(offset // 2) % len(NAP_AM_CYCLE)]
 
 
 def tet_year_element(lunar_year: int) -> str:
-    """Year Ngũ hành by Vietnamese Nạp Âm (Tet), not Chinese Thiên can."""
-    offset = lunar_year - TET_YEAR_BASE
-    return NAP_AM_ELEMENTS[(offset // 2) % len(NAP_AM_ELEMENTS)]
+    """Nạp Âm destiny element (not the Chinese year-pillar stem element)."""
+    return tet_year_nap_am(lunar_year)[0]
 
 zodiac_traits = {
     "Rat": {
@@ -357,9 +364,10 @@ def gregorian_to_lunar_animals(year: int, month: int, day: int, hour: int = None
     year_branch_index = (lunar.year - offset) % 12
     year_animal = ZODIAC[year_branch_index]
 
-    # YEAR element: Vietnamese Nạp Âm / Tet mệnh (base 1960), not Chinese stem.
+    # YEAR pillar element: Chinese Heavenly-Stem rotation (base 1984 = Wood).
     year_stem_index = (lunar.year - offset) % 10
-    year_element = tet_year_element(lunar.year)
+    year_element = ELEMENTS[year_stem_index]
+    year_destiny_element, year_element_destiny = tet_year_nap_am(lunar.year)
 
     # MONTH animal (1st month = Tiger, 2nd = Cat, … 12th = Buffalo)
     # Lunar month 1 is Tiger, so shift by +2
@@ -388,6 +396,8 @@ def gregorian_to_lunar_animals(year: int, month: int, day: int, hour: int = None
         "is_leap_month": lunar.isLeapMonth,
         "year_animal": year_animal,
         "year_element": year_element,
+        "year_destiny_element": year_destiny_element,
+        "year_element_destiny": year_element_destiny,
         "month_animal": month_animal,
         "month_element": month_element,
         "day_animal": day_animal,

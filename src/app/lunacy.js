@@ -18,7 +18,7 @@ const ZODIAC = [
   "Pig",
 ];
 
-/** Month/day/hour stem elements. Year pillars use Nạp Âm (see NAP_AM_ELEMENTS). */
+/** Heavenly-stem elements for year/month/day/hour pillars (Chinese rotation). */
 const ELEMENTS = [
   "Wood",
   "Wood",
@@ -33,8 +33,9 @@ const ELEMENTS = [
 ];
 
 /**
- * Vietnamese Nạp Âm (Tet / Can Chi mệnh), base year 1960.
- * Distinct from Chinese Heavenly-Stem elements — e.g. 1990 is Earth Horse, not Metal.
+ * Vietnamese Nạp Âm elemental destiny (base year 1960).
+ * Separate from pillar stem elements — e.g. 1990 pillar is Metal Horse,
+ * while Nạp Âm destiny is Roadside Earth.
  * Mirrors src/lunacy/fengshui.py NAP_AM_CYCLE.
  */
 const TET_YEAR_BASE = 1960;
@@ -366,7 +367,7 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
   const offset = 1984;
 
   const yearBranchIndex = ((lunar.year - offset) % 12 + 12) % 12;
-  // Stem index kept for yin/yang; year element uses Tet Nạp Âm (base 1960).
+  // Year pillar element follows Chinese Heavenly-Stem rotation (base 1984).
   const yearStemIndex = ((lunar.year - offset) % 10 + 10) % 10;
   const monthBranchIndex = (lunar.month + 1) % 12;
   const monthStemIndex = (lunar.month - 1) % 10;
@@ -384,7 +385,8 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
     isLeapMonth: lunar.isLeapMonth,
     yearStemIndex,
     yearAnimal: ZODIAC[yearBranchIndex],
-    yearElement: yearNapAm.element,
+    yearElement: ELEMENTS[yearStemIndex],
+    yearDestinyElement: yearNapAm.element,
     yearElementDestiny: yearNapAm.destiny,
     yearPolarity: stemPolarity(yearStemIndex),
     monthStemIndex,

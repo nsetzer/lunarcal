@@ -63,5 +63,5 @@ Enable Pages in the repo: **Settings → Pages → Source: GitHub Actions**.
 ## Notes
 
 - Lunar conversion covers Chinese/Vietnamese calendar years **1900–2099** (same range as `lunardate`).
-- Year elements use Vietnamese Nạp Âm / Tet mệnh (base 1960; e.g. 1990 = Earth Horse), not Chinese Heavenly-Stem elements. Month/day/hour still use stem cycles. Verified with `npm test`.
+- Four-pillar elements use Chinese Heavenly-Stem rotation (e.g. 1990 = Metal Horse). Year Nạp Âm destiny is separate (e.g. Roadside Earth). Verified with `npm test`.
 - Hour pillars use the traditional two-hour branches (Rat covers 23:00–00:59).

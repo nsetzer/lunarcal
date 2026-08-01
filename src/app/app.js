@@ -7,7 +7,7 @@ import {
   ANIMAL_EMOJI,
   TAM_HOP_GROUPS,
   TU_HANH_XUNG_GROUPS,
-} from "./lunacy.js?v=9";
+} from "./lunacy.js?v=10";
 
 const dateInput = document.getElementById("date");
 const hourInput = document.getElementById("hour");
@@ -267,8 +267,8 @@ function render() {
 
     const leap = data.isLeapMonth ? " (leap)" : "";
     const lunarText = `${data.lunarYear}-${pad2(data.lunarMonth)}-${pad2(data.lunarDay)}${leap}`;
-    const destinyEmoji = ELEMENT_EMOJI[data.yearElement] || "";
-    const destinyText = `${destinyEmoji} ${data.yearElementDestiny}`.trim();
+    const destinyEmoji = ELEMENT_EMOJI[data.yearDestinyElement] || "";
+    const destinyText = `${destinyEmoji} ${data.yearDestinyElement} (${data.yearElementDestiny})`.trim();
 
     const rows = [
       ["Year", formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity)],
