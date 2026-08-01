@@ -202,7 +202,8 @@ h1 {
 
 .lede {
   margin: 0.75rem 0 0;
-  max-width: 36rem;
+  max-width: none;
+  width: 100%;
   color: var(--muted);
 }
 
@@ -217,6 +218,11 @@ h1 {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   animation: rise 800ms 80ms ease both;
+}
+
+.controls--pillars {
+  grid-template-columns: 1.6fr 0.8fr;
+  margin-bottom: 1.25rem;
 }
 
 label {
@@ -250,14 +256,6 @@ input:focus {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.lunar-meta {
-  margin: 1.25rem 0 0.75rem;
-  min-height: 1.5rem;
-  font-size: 0.95rem;
-  color: var(--muted);
-  animation: rise 850ms 120ms ease both;
-}
-
 .pillars {
   width: 100%;
   border-collapse: separate;
@@ -277,7 +275,8 @@ input:focus {
   border-bottom: 1px solid var(--line);
 }
 
-.pillars thead th {
+.pillars thead th,
+.pillars .pillars-cols th {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -303,6 +302,40 @@ input:focus {
   background: rgba(200, 226, 216, 0.35);
 }
 
+.pillars--card {
+  margin-top: 0;
+}
+
+.pillars--card .pillars-meta th {
+  width: 32%;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  background: rgba(200, 226, 216, 0.28);
+}
+
+.pillars--card .pillars-meta td {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(200, 226, 216, 0.12);
+}
+
+.pillars--card .pillars-meta:hover,
+.pillars--card .pillars-cols:hover {
+  background: transparent;
+}
+
+.pillars--card .pillars-cols th {
+  border-top: 1px solid var(--line);
+}
+
+.pillars--card .pillars-cols:hover th {
+  background: linear-gradient(180deg, rgba(200, 226, 216, 0.65), transparent);
+}
+
 .emoji {
   display: inline-block;
   margin-right: 0.25rem;
@@ -311,16 +344,16 @@ input:focus {
   animation: pop 500ms ease both;
 }
 
-.pillars tbody tr:nth-child(1) .emoji {
+.pillars--card .pillars-data:nth-child(4) .emoji {
   animation-delay: 40ms;
 }
-.pillars tbody tr:nth-child(2) .emoji {
+.pillars--card .pillars-data:nth-child(5) .emoji {
   animation-delay: 90ms;
 }
-.pillars tbody tr:nth-child(3) .emoji {
+.pillars--card .pillars-data:nth-child(6) .emoji {
   animation-delay: 140ms;
 }
-.pillars tbody tr:nth-child(4) .emoji {
+.pillars--card .pillars-data:nth-child(7) .emoji {
   animation-delay: 190ms;
 }
 
@@ -340,7 +373,7 @@ input:focus {
 
 .appendix-lede {
   margin: 0.55rem 0 0;
-  max-width: 40rem;
+  max-width: none;
   color: var(--muted);
 }
 
@@ -571,10 +604,13 @@ input:focus {
 }
 
 .zodiac-clock-wrap {
-  margin: 1.75rem 0 0;
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  max-width: min(560px, 100%);
+  max-width: min(100%, 95vw);
+  margin: 1.75rem auto 0;
+  padding: 0;
 }
 
 .zodiac-clock-caption {
@@ -587,8 +623,10 @@ input:focus {
 
 #zodiac-clock {
   display: block;
-  width: 100%;
+  width: min(560px, 100%);
+  max-width: 100%;
   height: auto;
+  margin-inline: auto;
   border-radius: var(--radius);
   background: var(--panel);
   border: 1px solid var(--line);

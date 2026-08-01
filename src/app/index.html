@@ -29,14 +29,25 @@
     <main class="shell">
       <header class="brand">
         <p class="brand-mark">VN Lunar Calendar</p>
-        <h1>Four pillars</h1>
         <p class="lede">
-          Pick a Gregorian date and time to see the Vietnamese element and animal
-          for year, month, day, and hour.
+          In Vietnamese tradition, the <strong>Tết Lunar Calendar</strong> is used instead of the Chinese lunar calendar.
+          Although the two calendars share a common historical foundation, Vietnam adapted the system over centuries to reflect its own cultural traditions, symbolism, and ways of understanding the natural world.
+          Most notably, the Vietnamese zodiac uses the <strong>Buffalo</strong> and <strong>Cat</strong> in place of the Chinese <strong>Ox</strong> and <strong>Rabbit</strong>, and follows a different rotation in the assignment of the Five Elements.
+        </p>
+        <p class="lede">
+          Within the Vietnamese lunar calendar, years are organized according to the <strong>Sexagenary Cycle</strong>, a repeating cycle of sixty combinations. Each position in the cycle is formed by pairing one of the <strong>Ten Heavenly Stems</strong> with one of the <strong>Twelve Earthly Branches</strong>. Together, these provide each year with its elemental and zodiac characteristics.
+        </p>
+        <p class="lede">
+          The same system can be applied more precisely to the <strong>year, month, day, and hour of birth</strong>. These four points form the <strong>Four Pillars</strong>, with each pillar consisting of a Heavenly Stem and an Earthly Branch.
+          Each Stem and Branch also carries a <strong>Yin or Yang polarity</strong>, adding another dimension to the elemental and zodiac associations of each pillar.
+          Taken together, the Four Pillars provide a traditional framework for interpreting the elemental and zodiac influences associated with the moment of a person's birth.
+        </p>
+        <p class="lede">
+          Pick a Gregorian date and hour to see the Vietnamese element and animal for year, month, day, and hour.
         </p>
       </header>
 
-      <form class="controls" autocomplete="off">
+      <form class="controls controls--pillars" autocomplete="off">
         <label>
           <span>Date</span>
           <input id="date" type="date" required />
@@ -45,32 +56,16 @@
           <span>Hour</span>
           <input id="hour" type="number" min="0" max="23" step="1" required />
         </label>
-        <label>
-          <span>Minutes</span>
-          <input id="minute" type="number" min="0" max="59" step="1" required />
-        </label>
       </form>
 
-      <p id="lunar-meta" class="lunar-meta" aria-live="polite"></p>
-
-      <table id="pillars" class="pillars">
-        <thead>
-          <tr>
-            <th scope="col">Pillar</th>
-            <th scope="col">Element</th>
-            <th scope="col">Animal</th>
-          </tr>
-        </thead>
+      <table id="pillars" class="pillars pillars--card" aria-live="polite">
         <tbody></tbody>
       </table>
 
       <aside class="appendix" aria-labelledby="appendix-title">
         <h2 id="appendix-title">Appendix</h2>
         <p class="appendix-lede">
-          Reference lists for the five elements (Ngũ hành), ten Heavenly Stems
-          (Thiên can), and twelve Earthly Branches / zodiac animals (Địa chi).
-          A year name pairs one stem with one animal — for example, 2026 is a
-          Fire Horse year (Bính Ngọ: Yang Fire + Horse).
+          The <strong>Five Elements</strong>—Wood, Fire, Earth, Metal, and Water—describe five fundamental forms of energy within the Vietnamese traditional system. Rather than representing physical substances alone, each element expresses a set of qualities, tendencies, and relationships found in nature and human life. The elements interact through repeating cycles of <strong>generation and control</strong>: each element can nourish and strengthen another, while also regulating or restraining another. Within the Four Pillars, the balance and interaction of these five elements provide a framework for understanding how different energies support, oppose, or influence one another.
         </p>
 
         <section class="appendix-block" aria-labelledby="elements-title">
@@ -116,9 +111,7 @@
         <section class="appendix-block" aria-labelledby="stems-title">
           <h3 id="stems-title">Heavenly Stems</h3>
           <p class="appendix-lede">
-            The ten Heavenly Stems (Thiên can) cycle with the twelve animals to
-            name years and other pillars. Each element appears twice — Yang then
-            Yin — so the full stem–branch calendar repeats every 60 years.
+            The <strong>Ten Heavenly Stems (Thiên Can)</strong> represent the Five Elements expressed through their <strong>Yin and Yang polarities</strong>. Each of the five elements—Wood, Fire, Earth, Metal, and Water—appears twice: once in a Yang form and once in a Yin form, creating the ten Stems.
           </p>
           <table class="ref-table">
             <thead>
@@ -181,18 +174,16 @@
               </tr>
             </tbody>
           </table>
+          <p class="append-lede">
+            In Vietnamese tradition, a person is also associated with an <strong>Elemental Destiny (Nạp Âm)</strong>, which gives a more specific expression to the Five Elements. Rather than identifying a person simply as Wood, Fire, Earth, Metal, or Water, Nạp Âm assigns a distinctive elemental form to each pair of years within the sixty-year Sexagenary Cycle. These forms are expressed through imagery drawn from the natural world, such as <strong>Fire in the Furnace</strong>, <strong>Water of the Great Sea</strong>, or <strong>Earth by the Roadside</strong>. For example, 1990—the year of <strong>Canh Ngọ (Yang Metal Horse)</strong>—has the Elemental Destiny <strong>Lộ Bàng Thổ</strong>, or <strong>Earth by the Roadside</strong>. Although the year's Heavenly Stem is Metal, its Nạp Âm destiny is Earth, illustrating that Elemental Destiny is a separate layer of interpretation derived from the complete Stem–Branch combination.
+          </p>
         </section>
 
         <section class="appendix-block" aria-labelledby="zodiac-title">
-          <h3 id="zodiac-title">Zodiac animals</h3>
+          <h3 id="zodiac-title">Earthly Branches</h3>
           <p class="appendix-lede">
-            The twelve animals follow the Earthly Branch order (Địa chi), a fixed
-            cycle used for years, months, days, and hours: Rat, Buffalo, Tiger,
-            Cat, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, Pig. Folklore
-            ties that sequence to the Jade Emperor’s race — the Rat finished
-            first by riding the Buffalo’s back, and the rest arrived in the
-            places shown below. In the Vietnamese zodiac the fourth place is the
-            Cat (Mão), where Chinese tradition uses the Rabbit.
+            The <strong>Twelve Earthly Branches (Địa Chi)</strong> are represented by the twelve animals of the Vietnamese zodiac: Rat, Buffalo, Tiger, Cat, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, and Pig. Like the Heavenly Stems, the Earthly Branches follow an alternating <strong>Yin and Yang polarity</strong>, beginning with the Yang Rat and continuing in sequence through the twelve animals.
+            When the Twelve Earthly Branches are paired with the Ten Heavenly Stems, their matching Yin or Yang polarities produce the sixty unique combinations of the <strong>Sexagenary Cycle</strong>.
           </p>
           <p class="appendix-lede">
             <strong>Friends</strong> are triad allies (Tam hợp): four groups of
@@ -226,6 +217,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Animal</th>
                 <th scope="col">Vietnamese</th>
+                <th scope="col">Branch</th>
                 <th scope="col">Friends</th>
                 <th scope="col">Enemies</th>
               </tr>
@@ -235,6 +227,7 @@
                 <td>1</td>
                 <td><span class="emoji" aria-hidden="true">🐀</span> Rat</td>
                 <td>Tý</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Zi</td>
                 <td><span class="emoji" aria-label="Dragon, Monkey">🐉 🐒</span></td>
                 <td><span class="emoji" aria-label="Horse, Cat, Rooster">🐴 🐈 🐓</span></td>
               </tr>
@@ -242,6 +235,7 @@
                 <td>2</td>
                 <td><span class="emoji" aria-hidden="true">🐃</span> Buffalo</td>
                 <td>Sửu</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> Chou</td>
                 <td><span class="emoji" aria-label="Snake, Rooster">🐍 🐓</span></td>
                 <td><span class="emoji" aria-label="Goat, Dragon, Dog">🐐 🐉 🐕</span></td>
               </tr>
@@ -249,6 +243,7 @@
                 <td>3</td>
                 <td><span class="emoji" aria-hidden="true">🐅</span> Tiger</td>
                 <td>Dần</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Yin</td>
                 <td><span class="emoji" aria-label="Horse, Dog">🐴 🐕</span></td>
                 <td><span class="emoji" aria-label="Monkey, Snake, Pig">🐒 🐍 🐷</span></td>
               </tr>
@@ -256,6 +251,7 @@
                 <td>4</td>
                 <td><span class="emoji" aria-hidden="true">🐈</span> Cat</td>
                 <td>Mão</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> Mao</td>
                 <td><span class="emoji" aria-label="Goat, Pig">🐐 🐷</span></td>
                 <td><span class="emoji" aria-label="Rat, Horse, Rooster">🐀 🐴 🐓</span></td>
               </tr>
@@ -263,6 +259,7 @@
                 <td>5</td>
                 <td><span class="emoji" aria-hidden="true">🐉</span> Dragon</td>
                 <td>Thìn</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Chen</td>
                 <td><span class="emoji" aria-label="Rat, Monkey">🐀 🐒</span></td>
                 <td><span class="emoji" aria-label="Buffalo, Goat, Dog">🐃 🐐 🐕</span></td>
               </tr>
@@ -270,6 +267,7 @@
                 <td>6</td>
                 <td><span class="emoji" aria-hidden="true">🐍</span> Snake</td>
                 <td>Tỵ</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> Si</td>
                 <td><span class="emoji" aria-label="Buffalo, Rooster">🐃 🐓</span></td>
                 <td><span class="emoji" aria-label="Tiger, Monkey, Pig">🐅 🐒 🐷</span></td>
               </tr>
@@ -277,6 +275,7 @@
                 <td>7</td>
                 <td><span class="emoji" aria-hidden="true">🐴</span> Horse</td>
                 <td>Ngọ</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Wu</td>
                 <td><span class="emoji" aria-label="Tiger, Dog">🐅 🐕</span></td>
                 <td><span class="emoji" aria-label="Rat, Cat, Rooster">🐀 🐈 🐓</span></td>
               </tr>
@@ -284,6 +283,7 @@
                 <td>8</td>
                 <td><span class="emoji" aria-hidden="true">🐐</span> Goat</td>
                 <td>Mùi</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> Wei</td>
                 <td><span class="emoji" aria-label="Cat, Pig">🐈 🐷</span></td>
                 <td><span class="emoji" aria-label="Buffalo, Dragon, Dog">🐃 🐉 🐕</span></td>
               </tr>
@@ -291,6 +291,7 @@
                 <td>9</td>
                 <td><span class="emoji" aria-hidden="true">🐒</span> Monkey</td>
                 <td>Thân</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Shen</td>
                 <td><span class="emoji" aria-label="Rat, Dragon">🐀 🐉</span></td>
                 <td><span class="emoji" aria-label="Tiger, Snake, Pig">🐅 🐍 🐷</span></td>
               </tr>
@@ -298,6 +299,7 @@
                 <td>10</td>
                 <td><span class="emoji" aria-hidden="true">🐓</span> Rooster</td>
                 <td>Dậu</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> You</td>
                 <td><span class="emoji" aria-label="Buffalo, Snake">🐃 🐍</span></td>
                 <td><span class="emoji" aria-label="Rat, Horse, Cat">🐀 🐴 🐈</span></td>
               </tr>
@@ -305,6 +307,7 @@
                 <td>11</td>
                 <td><span class="emoji" aria-hidden="true">🐕</span> Dog</td>
                 <td>Tuất</td>
+                <td><span class="emoji" aria-hidden="true">☀️</span> Xu</td>
                 <td><span class="emoji" aria-label="Tiger, Horse">🐅 🐴</span></td>
                 <td><span class="emoji" aria-label="Buffalo, Goat, Dragon">🐃 🐐 🐉</span></td>
               </tr>
@@ -312,6 +315,7 @@
                 <td>12</td>
                 <td><span class="emoji" aria-hidden="true">🐷</span> Pig</td>
                 <td>Hợi</td>
+                <td><span class="emoji" aria-hidden="true">🌙</span> Hai</td>
                 <td><span class="emoji" aria-label="Cat, Goat">🐈 🐐</span></td>
                 <td><span class="emoji" aria-label="Tiger, Monkey, Snake">🐅 🐒 🐍</span></td>
               </tr>
@@ -330,6 +334,6 @@
         </section>
       </aside>
     </main>
-    <script type="module" src="./app.js?v=6"></script>
+    <script type="module" src="./app.js?v=9"></script>
   </body>
 </html>

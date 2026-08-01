@@ -18,6 +18,7 @@ ZODIAC = [
 ]
 
 # Five Elements (Wu Xing) - cycles every 10 years/months/days
+# Used for month/day/hour stems. Year pillars use Nạp Âm (see below).
 ELEMENTS = [
     "Wood",     # Mộc
     "Wood",     # Mộc
@@ -30,6 +31,49 @@ ELEMENTS = [
     "Water",    # Thủy
     "Water"     # Thủy
 ]
+
+# Vietnamese Nạp Âm year elements (Tet / Can Chi mệnh), base year 1960.
+# Distinct from Chinese Heavenly-Stem elements — e.g. 1990 is Earth Horse, not Metal.
+# Mirrors src/lunacy/fengshui.py NAP_AM_CYCLE element column.
+TET_YEAR_BASE = 1960
+NAP_AM_ELEMENTS = [
+    "Earth",  # 1960–61  Earth on the Wall
+    "Metal",  # 1962–63  Refined Gold
+    "Fire",   # 1964–65  Lamp Fire
+    "Water",  # 1966–67  Water from the Heavenly River
+    "Earth",  # 1968–69  Great Marsh Earth
+    "Metal",  # 1970–71  Jewelry Gold
+    "Wood",   # 1972–73  Mulberry Wood
+    "Water",  # 1974–75  Great Stream Water
+    "Earth",  # 1976–77  Sand Earth
+    "Fire",   # 1978–79  Fire Above the Sky
+    "Wood",   # 1980–81  Pomegranate Wood
+    "Water",  # 1982–83  Great Sea Water
+    "Metal",  # 1984–85  Gold in the Sea
+    "Fire",   # 1986–87  Fire in the Furnace
+    "Wood",   # 1988–89  Great Forest Wood
+    "Earth",  # 1990–91  Roadside Earth
+    "Metal",  # 1992–93  Sword Edge Metal
+    "Fire",   # 1994–95  Mountain Peak Fire
+    "Water",  # 1996–97  Stream Water
+    "Earth",  # 1998–99  Wall Earth
+    "Metal",  # 2000–01  White Wax Metal
+    "Wood",   # 2002–03  Willow Wood
+    "Water",  # 2004–05  Spring Water
+    "Earth",  # 2006–07  Roof Tile Earth
+    "Fire",   # 2008–09  Thunderbolt Fire
+    "Wood",   # 2010–11  Pine and Cypress Wood
+    "Water",  # 2012–13  Long Flowing Water
+    "Metal",  # 2014–15  Sand Gold
+    "Fire",   # 2016–17  Mountain-Foot Fire
+    "Wood",   # 2018–19  Plain Wood
+]
+
+
+def tet_year_element(lunar_year: int) -> str:
+    """Year Ngũ hành by Vietnamese Nạp Âm (Tet), not Chinese Thiên can."""
+    offset = lunar_year - TET_YEAR_BASE
+    return NAP_AM_ELEMENTS[(offset // 2) % len(NAP_AM_ELEMENTS)]
 
 zodiac_traits = {
     "Rat": {
@@ -305,16 +349,17 @@ def gregorian_to_lunar_animals(year: int, month: int, day: int, hour: int = None
     """
     # Convert Gregorian -> Lunar
     gregorian_date = datetime.date(year, month, day)
-    lunar = LunarDate.fromSolarDate(year, month, day)
+    lunar = LunarDate.from_solar_date(year, month, day)
 
     # YEAR animal (Earthly Branch cycles every 12 years, base: 1984 = Rat year)
+    # Same phase as Tet base 1960 (24-year gap).
     offset = 1984
     year_branch_index = (lunar.year - offset) % 12
     year_animal = ZODIAC[year_branch_index]
 
-    # YEAR element (Heavenly Stem cycles every 10 years, base: 1984 = Wood year)
+    # YEAR element: Vietnamese Nạp Âm / Tet mệnh (base 1960), not Chinese stem.
     year_stem_index = (lunar.year - offset) % 10
-    year_element = ELEMENTS[year_stem_index]
+    year_element = tet_year_element(lunar.year)
 
     # MONTH animal (1st month = Tiger, 2nd = Cat, … 12th = Buffalo)
     # Lunar month 1 is Tiger, so shift by +2
@@ -370,7 +415,8 @@ def gregorian_to_lunar_animals(year: int, month: int, day: int, hour: int = None
 
 
 # Example usage:
-data = gregorian_to_lunar_animals(2025, 10, 2, 4, 15)
+#data = gregorian_to_lunar_animals(2025, 10, 2, 4, 15)
+data = gregorian_to_lunar_animals(1990, 3, 12, 12, 17)
 for key, value in data.items():
     print(f"{key}: {value}")
 

@@ -1,16 +1,16 @@
 import {
   gregorianToLunarAnimals,
   formatPillar,
+  ELEMENT_EMOJI,
+  POLARITY_EMOJI,
   ZODIAC,
   ANIMAL_EMOJI,
   TAM_HOP_GROUPS,
   TU_HANH_XUNG_GROUPS,
-} from "./lunacy.js?v=4";
+} from "./lunacy.js?v=9";
 
 const dateInput = document.getElementById("date");
 const hourInput = document.getElementById("hour");
-const minuteInput = document.getElementById("minute");
-const lunarMeta = document.getElementById("lunar-meta");
 const tableBody = document.querySelector("#pillars tbody");
 const clockCanvas = document.getElementById("zodiac-clock");
 const clockCtx = clockCanvas.getContext("2d");
@@ -45,17 +45,15 @@ function pad2(n) {
 function setDefaults() {
   dateInput.value = "2025-10-02";
   hourInput.value = "4";
-  minuteInput.value = "15";
 }
 
 function parseInputs() {
   const [year, month, day] = dateInput.value.split("-").map(Number);
   const hour = Number(hourInput.value);
-  const minute = Number(minuteInput.value);
-  if (!year || !month || !day || Number.isNaN(hour) || Number.isNaN(minute)) {
-    throw new Error("Pick a valid date and time.");
+  if (!year || !month || !day || Number.isNaN(hour)) {
+    throw new Error("Pick a valid date and hour.");
   }
-  return { year, month, day, hour, minute };
+  return { year, month, day, hour };
 }
 
 /** Canvas angle: midnight at top, clockwise. */
@@ -123,7 +121,7 @@ function drawRelationLines(ctx, dots, edges, color, lineWidth, selectedAnimal) {
 
   const batches = selectedAnimal
     ? [
-        [dim, withAlpha(color, 0.25)],
+        [dim, withAlpha(color, 0.10)],
         [bright, color],
       ]
     : [[bright, color]];
@@ -264,37 +262,60 @@ function drawZodiacClock() {
 
 function render() {
   try {
-    const { year, month, day, hour, minute } = parseInputs();
-    const data = gregorianToLunarAnimals(year, month, day, hour, minute);
+    const { year, month, day, hour } = parseInputs();
+    const data = gregorianToLunarAnimals(year, month, day, hour, 0);
 
     const leap = data.isLeapMonth ? " (leap)" : "";
-    lunarMeta.textContent = `Lunar ${data.lunarYear}-${pad2(data.lunarMonth)}-${pad2(data.lunarDay)}${leap}`;
+    const lunarText = `${data.lunarYear}-${pad2(data.lunarMonth)}-${pad2(data.lunarDay)}${leap}`;
+    const destinyEmoji = ELEMENT_EMOJI[data.yearElement] || "";
+    const destinyText = `${destinyEmoji} ${data.yearElementDestiny}`.trim();
 
     const rows = [
-      ["Year", formatPillar(data.yearElement, data.yearAnimal)],
-      ["Month", formatPillar(data.monthElement, data.monthAnimal)],
-      ["Day", formatPillar(data.dayElement, data.dayAnimal)],
-      ["Hour", formatPillar(data.hourElement, data.hourAnimal)],
+      ["Year", formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity)],
+      ["Month", formatPillar(data.monthElement, data.monthAnimal, data.monthPolarity)],
+      ["Day", formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity)],
+      ["Hour", formatPillar(data.hourElement, data.hourAnimal, data.hourPolarity)],
     ];
 
-    tableBody.innerHTML = rows
+    const pillarRows = rows
       .map(
         ([pillar, p]) => `
-      <tr>
+      <tr class="pillars-data">
         <th scope="row">${pillar}</th>
+        <td><span class="emoji" aria-hidden="true">${p.polarityEmoji || POLARITY_EMOJI[p.polarity] || ""}</span> ${p.polarity}</td>
         <td><span class="emoji" aria-hidden="true">${p.elementEmoji}</span> ${p.element}</td>
         <td><span class="emoji" aria-hidden="true">${p.animalEmoji}</span> ${p.animal}</td>
       </tr>`
       )
       .join("");
+
+    tableBody.innerHTML = `
+      <tr class="pillars-meta">
+        <th scope="row">Lunar date</th>
+        <td colspan="3">${lunarText}</td>
+      </tr>
+      <tr class="pillars-meta">
+        <th scope="row">Element destiny</th>
+        <td colspan="3">${destinyText}</td>
+      </tr>
+      <tr class="pillars-cols">
+        <th scope="col">Pillar</th>
+        <th scope="col">Polarity</th>
+        <th scope="col">Element</th>
+        <th scope="col">Animal</th>
+      </tr>
+      ${pillarRows}`;
   } catch (err) {
-    lunarMeta.textContent = err.message || "Unable to convert that date.";
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = `
+      <tr class="pillars-meta">
+        <th scope="row">Error</th>
+        <td colspan="3">${err.message || "Unable to convert that date."}</td>
+      </tr>`;
   }
   drawZodiacClock();
 }
 
-for (const el of [dateInput, hourInput, minuteInput]) {
+for (const el of [dateInput, hourInput]) {
   el.addEventListener("input", render);
   el.addEventListener("change", render);
 }

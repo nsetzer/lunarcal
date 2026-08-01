@@ -18,6 +18,7 @@ const ZODIAC = [
   "Pig",
 ];
 
+/** Month/day/hour stem elements. Year pillars use Nạp Âm (see NAP_AM_ELEMENTS). */
 const ELEMENTS = [
   "Wood",
   "Wood",
@@ -30,6 +31,63 @@ const ELEMENTS = [
   "Water",
   "Water",
 ];
+
+/**
+ * Vietnamese Nạp Âm (Tet / Can Chi mệnh), base year 1960.
+ * Distinct from Chinese Heavenly-Stem elements — e.g. 1990 is Earth Horse, not Metal.
+ * Mirrors src/lunacy/fengshui.py NAP_AM_CYCLE.
+ */
+const TET_YEAR_BASE = 1960;
+const NAP_AM_CYCLE = [
+  ["Earth", "Earth on the Wall"],
+  ["Metal", "Refined Gold"],
+  ["Fire", "Lamp Fire"],
+  ["Water", "Water from the Heavenly River"],
+  ["Earth", "Great Marsh Earth"],
+  ["Metal", "Jewelry Gold"],
+  ["Wood", "Mulberry Wood"],
+  ["Water", "Great Stream Water"],
+  ["Earth", "Sand Earth"],
+  ["Fire", "Fire Above the Sky"],
+  ["Wood", "Pomegranate Wood"],
+  ["Water", "Great Sea Water"],
+  ["Metal", "Gold in the Sea"],
+  ["Fire", "Fire in the Furnace"],
+  ["Wood", "Great Forest Wood"],
+  ["Earth", "Roadside Earth"],
+  ["Metal", "Sword Edge Metal"],
+  ["Fire", "Mountain Peak Fire"],
+  ["Water", "Stream Water"],
+  ["Earth", "Wall Earth"],
+  ["Metal", "White Wax Metal"],
+  ["Wood", "Willow Wood"],
+  ["Water", "Spring Water"],
+  ["Earth", "Roof Tile Earth"],
+  ["Fire", "Thunderbolt Fire"],
+  ["Wood", "Pine and Cypress Wood"],
+  ["Water", "Long Flowing Water"],
+  ["Metal", "Sand Gold"],
+  ["Fire", "Mountain-Foot Fire"],
+  ["Wood", "Plain Wood"],
+];
+const NAP_AM_ELEMENTS = NAP_AM_CYCLE.map(([element]) => element);
+
+function napAmIndex(lunarYear) {
+  const offset = lunarYear - TET_YEAR_BASE;
+  const idx = Math.floor(offset / 2);
+  return ((idx % NAP_AM_CYCLE.length) + NAP_AM_CYCLE.length) % NAP_AM_CYCLE.length;
+}
+
+/** Year Ngũ hành + Nạp Âm destiny by Vietnamese Tet calendar. */
+function tetYearNapAm(lunarYear) {
+  const [element, destiny] = NAP_AM_CYCLE[napAmIndex(lunarYear)];
+  return { element, destiny };
+}
+
+/** Year Ngũ hành by Vietnamese Nạp Âm (Tet), not Chinese Thiên can. */
+function tetYearElement(lunarYear) {
+  return tetYearNapAm(lunarYear).element;
+}
 
 const ELEMENT_EMOJI = {
   Wood: "🌳",
@@ -308,6 +366,7 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
   const offset = 1984;
 
   const yearBranchIndex = ((lunar.year - offset) % 12 + 12) % 12;
+  // Stem index kept for yin/yang; year element uses Tet Nạp Âm (base 1960).
   const yearStemIndex = ((lunar.year - offset) % 10 + 10) % 10;
   const monthBranchIndex = (lunar.month + 1) % 12;
   const monthStemIndex = (lunar.month - 1) % 10;
@@ -316,6 +375,7 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
   const daysDiff = daysBetweenLunar(lunar, baseDate);
   const dayBranchIndex = (((ZODIAC.indexOf("Goat") + daysDiff) % 12) + 12) % 12;
   const dayStemIndex = ((daysDiff % 10) + 10) % 10;
+  const yearNapAm = tetYearNapAm(lunar.year);
 
   const data = {
     lunarDay: lunar.day,
@@ -324,7 +384,8 @@ function gregorianToLunarAnimals(year, month, day, hour = null, minute = null) {
     isLeapMonth: lunar.isLeapMonth,
     yearStemIndex,
     yearAnimal: ZODIAC[yearBranchIndex],
-    yearElement: ELEMENTS[yearStemIndex],
+    yearElement: yearNapAm.element,
+    yearElementDestiny: yearNapAm.destiny,
     yearPolarity: stemPolarity(yearStemIndex),
     monthStemIndex,
     monthAnimal: ZODIAC[monthBranchIndex],
@@ -401,6 +462,9 @@ function elementRelation(elementA, elementB) {
 export {
   ZODIAC,
   ELEMENTS,
+  NAP_AM_CYCLE,
+  NAP_AM_ELEMENTS,
+  TET_YEAR_BASE,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
   POLARITY_EMOJI,
@@ -414,4 +478,6 @@ export {
   gregorianToLunarAnimals,
   formatPillar,
   elementRelation,
+  tetYearElement,
+  tetYearNapAm,
 };

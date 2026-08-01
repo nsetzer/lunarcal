@@ -10,7 +10,7 @@ import {
   isTuHanhXung,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
-} from "./lunacy.js?v=6";
+} from "./lunacy.js?v=8";
 
 const dateA = document.getElementById("date-a");
 const dateB = document.getElementById("date-b");
@@ -92,11 +92,20 @@ function badMark(matched, label) {
   return `<span class="rel-mark rel-mark--neutral" title="${label}: no clash" aria-label="${label}: no clash">●</span>`;
 }
 
+function destinyCell(element, destiny) {
+  if (!destiny) return "—";
+  const emoji = ELEMENT_EMOJI[element] || "";
+  return `<div class="pillar-cell">
+    <span class="pillar-cell-text">${destiny}</span>
+  </div>`;
+}
+
 function datePillars(dateInput, hourInput) {
   const { year, month, day } = parseDateValue(dateInput.value);
   const hour = parseHourValue(hourInput.value);
   const data = gregorianToLunarAnimals(year, month, day, hour, 0);
   return {
+    destiny: { element: data.yearElement, destiny: data.yearElementDestiny },
     Year: formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity),
     Month: formatPillar(data.monthElement, data.monthAnimal, data.monthPolarity),
     Day: formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity),
@@ -108,14 +117,23 @@ function updateCompareTable() {
   try {
     const a = datePillars(dateA, hourA);
     const b = datePillars(dateB, hourB);
+    const destinyRow = `
+      <tr>
+        <th scope="row">Elemental Destiny</th>
+        <td>${destinyCell(a.destiny.element, a.destiny.destiny)}</td>
+        <td>${destinyCell(b.destiny.element, b.destiny.destiny)}</td>
+        <td></td>
+      </tr>`;
     const rows = ["Year", "Month", "Day", "Hour"];
-    compareBody.innerHTML = rows
-      .map((name) => {
-        const pa = a[name];
-        const pb = b[name];
-        const relation = elementRelation(pa.element, pb.element);
-        // NOTE: temporarily hide Tam Hợp, Lục Hợp, Lục Xung, Tứ Hành Xung
-        return `
+    compareBody.innerHTML =
+      destinyRow +
+      rows
+        .map((name) => {
+          const pa = a[name];
+          const pb = b[name];
+          const relation = elementRelation(pa.element, pb.element);
+          // NOTE: temporarily hide Tam Hợp, Lục Hợp, Lục Xung, Tứ Hành Xung
+          return `
       <tr>
         <th scope="row">${name}</th>
         <td>${pillarCell(pa)}</td>
@@ -127,8 +145,8 @@ function updateCompareTable() {
         <td class="rel-cell">${badMark(isLucXung(pa.animal, pb.animal), "Lục Xung")}</td>
         <td class="rel-cell">${badMark(isTuHanhXung(pa.animal, pb.animal), "Tứ Hành Xung")}</td>-->
       </tr>`;
-      })
-      .join("");
+        })
+        .join("");
   } catch {
     compareBody.innerHTML = "";
   }

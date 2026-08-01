@@ -6,7 +6,7 @@ The web UI lives in `src/app`. The original Python helper is in `src/lunacy/luna
 
 ## Features
 
-- **Pillars** (`index.html`): date, hour, and minute inputs (defaults to 2025-10-02 at 04:15); live year/month/day/hour element + animal table; appendix for Ngũ hành, Thiên can, and Địa chi (Tam hợp / Tứ Hành Xung)
+- **Pillars** (`index.html`): date and hour inputs (defaults to 2025-10-02 at 04:00); pillars card with lunar date, Nạp Âm destiny, then year/month/day/hour polarity + element + animal; appendix for Ngũ hành, Thiên can, and Địa chi (Tam hợp / Tứ Hành Xung)
 - **Calendar** (`calendar.html`): compare two dates with yin/yang–element–animal year stems; month canvas view (Monday-first) with Gregorian day, lunar month/day, and daily element + animal
 - Vietnamese zodiac order (Cat in fourth place, not Rabbit)
 
@@ -63,5 +63,5 @@ Enable Pages in the repo: **Settings → Pages → Source: GitHub Actions**.
 ## Notes
 
 - Lunar conversion covers Chinese/Vietnamese calendar years **1900–2099** (same range as `lunardate`).
-- Element and animal rules follow `src/lunacy/lunacy.py`; the JS port is verified with `npm test`.
+- Year elements use Vietnamese Nạp Âm / Tet mệnh (base 1960; e.g. 1990 = Earth Horse), not Chinese Heavenly-Stem elements. Month/day/hour still use stem cycles. Verified with `npm test`.
 - Hour pillars use the traditional two-hour branches (Rat covers 23:00–00:59).
