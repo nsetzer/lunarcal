@@ -10,7 +10,8 @@ import {
   LUC_XUNG_PAIRS,
   ELEMENT_EMOJI,
   ANIMAL_EMOJI,
-} from "./lunacy.js?v=11";
+  POLARITY_EMOJI,
+} from "./lunacy.js?v=12";
 
 const dateA = document.getElementById("date-a");
 const dateB = document.getElementById("date-b");
@@ -589,7 +590,7 @@ function drawCalendar() {
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
     const lunarLabel = `${mark.emoji}${data.lunarDay}/${data.lunarMonth}`;
-    const stemLabel = `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
+    const stemLabel = `${POLARITY_EMOJI[data.dayPolarity] || ""}${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
     const dayLabel =
       year === 2025 && month === 10 && day === 2 ? `${day} 💒` : String(day);
 
