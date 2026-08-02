@@ -29,7 +29,7 @@
     <main class="shell shell--wide">
       <header class="brand">
         <p class="brand-mark">Calendar</p>
-        <h1>Month view</h1>
+        <h1>Auspicious Day Selector</h1>
         <p class="lede">
           Select two birth dates, then browse months to find wedding-day
           candidates. Use the filters below to exclude traditionally unfavorable
@@ -67,22 +67,27 @@
         </div>
       </section>
 
-      <table id="compare-pillars" class="pillars pillars--compare" aria-label="Four pillars comparison">
-        <thead>
-          <tr>
-            <th scope="col">Pillar</th>
-            <th scope="col"><span aria-hidden="true">☯️</span> Date A</th>
-            <th scope="col"><span aria-hidden="true">☯️</span> Date B</th>
-            <th scope="col">Element Relation</th>
-            <!--
-            <th scope="col" title="Tam Hợp — Triple Harmony">Tam Hợp</th>
-            <th scope="col" title="Lục Hợp — Six Harmonies">Lục Hợp</th>
-            <th scope="col" title="Lục Xung — Six Opposing Pairs">Lục Xung</th>
-            <th scope="col" title="Tứ Hành Xung — Four Conflict Groups">Tứ Hành Xung</th>-->
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div class="pillars-card pillars--compare">
+        <table id="compare-pillars" class="pillars pillars--nested" aria-label="Four pillars comparison">
+          <thead>
+            <tr>
+              <th scope="col">Pillar</th>
+              <th scope="col"><span aria-hidden="true">☯️</span> Date A</th>
+              <th scope="col"><span aria-hidden="true">☯️</span> Date B</th>
+              <th scope="col">Element Relation</th>
+              <!--
+              <th scope="col" title="Tam Hợp — Triple Harmony">Tam Hợp</th>
+              <th scope="col" title="Lục Hợp — Six Harmonies">Lục Hợp</th>
+              <th scope="col" title="Lục Xung — Six Opposing Pairs">Lục Xung</th>
+              <th scope="col" title="Tứ Hành Xung — Four Conflict Groups">Tứ Hành Xung</th>-->
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <table id="compare-totals" class="pillars pillars--nested pillars--totals" aria-label="Combined polarity and element totals">
+          <tbody></tbody>
+        </table>
+      </div>
 
       <aside class="day-guide" aria-labelledby="day-guide-title">
         <h2 id="day-guide-title">Choosing an auspicious day</h2>
@@ -92,6 +97,14 @@
           The filters below are the main exclusion and preference rules used
           with this calendar.
         </p>
+
+        <section class="appendix-block" aria-labelledby="nam-tuoi-title">
+          <h3 id="nam-tuoi-title">Can Chi</h3>
+          <p class="appendix-lede">
+            The <strong>Can Chi</strong> system combines two systems: the ten <strong>Heavenly Stems</strong> and the twelve <strong>Earthly Branches</strong>. Each system independently assigns both a <strong>Yin–Yang polarity</strong> and an element from the <strong>Five Elements</strong> (Wood, Fire, Earth, Metal, and Water). In the Heavenly Stems, the Five Elements are arranged as five pairs, with each element appearing once in its Yang form and once in its Yin form, producing the ten Stems. The Earthly Branches follow a twelve-position cycle in which Yin and Yang alternate, while each Branch is also assigned one of the Five Elements according to its traditional elemental association; each Branch is additionally represented by a zodiac animal. When a Stem and Branch are combined, their polarities always agree—Yang with Yang and Yin with Yin—but they can contribute different elements. A Can Chi designation therefore contains a <strong>Stem element</strong> and a <strong>Branch element</strong>, together with their shared Yin or Yang polarity and the zodiac animal associated with the Branch.
+
+          </p>
+        </section>
 
         <section class="appendix-block" aria-labelledby="nam-tuoi-title">
           <h3 id="nam-tuoi-title">Năm Tuổi</h3>
@@ -319,6 +332,51 @@
             </tbody>
           </table>
         </section>
+
+        <section class="appendix-block" aria-labelledby="choosing-best-title">
+          <h3 id="choosing-best-title">Choosing the best date</h3>
+          <p class="appendix-lede">
+            After eliminating dates considered generally unfavorable, choosing
+            the best date depends on which factors you are trying to balance or
+            emphasize. A date is not simply “good” or “bad” in isolation; its
+            suitability depends on how its Heavenly Stems, Earthly Branches,
+            Yin–Yang polarity, and Five Elements interact with the person and
+            the purpose of the event. Different dates may strengthen, weaken,
+            support, clash with, or balance different parts of a person’s Four
+            Pillars (BaZi). Therefore, the preferred date depends on what
+            matters most for the particular activity—for example, relationships
+            and marriage, career and business, family and children, health and
+            stability, or long-term development. This evaluation can be
+            understood through the four pillars of a person’s birth chart:
+          </p>
+          <ul class="appendix-lede pillar-meanings">
+            <li>
+              <strong>Year Pillar — Ancestry &amp; Outer World:</strong>
+              Represents family heritage, ancestral influences, early
+              environment, and the person’s relationship with the broader social
+              world.
+            </li>
+            <li>
+              <strong>Month Pillar — Environment &amp; Elemental Strength:</strong>
+              Represents the seasonal environment at birth and plays a major role
+              in determining the relative strength, weakness, and influence of
+              the Five Elements within the chart.
+            </li>
+            <li>
+              <strong>Day Pillar — Self &amp; Relationships:</strong>
+              Forms the personal center of the Four Pillars. Its Heavenly Stem
+              represents the self, known as the Day Master, while its Earthly
+              Branch is traditionally associated with the spouse, partnership,
+              and close relationships.
+            </li>
+            <li>
+              <strong>Hour Pillar — Aspirations &amp; Later Life:</strong>
+              Represents ambitions, inner aspirations, future development,
+              children and legacy, and influences traditionally understood to
+              become more prominent later in life.
+            </li>
+          </ul>
+        </section>
       </aside>
 
       <form class="controls controls--month" autocomplete="off">
@@ -340,31 +398,31 @@
           <legend>Filters</legend>
           <label class="rule-check">
             <input id="rule-nam-tuoi" type="checkbox" checked />
-            <span>Exclude Năm Tuổi</span>
+            <span>Exclude Năm Tuổi (🔁)</span>
           </label>
           <label class="rule-check">
             <input id="rule-ghost" type="checkbox" checked />
-            <span>Exclude Ghost Month</span>
+            <span>Exclude Ghost Month (👻)</span>
           </label>
           <label class="rule-check">
             <input id="rule-tam-nuong" type="checkbox" checked />
-            <span>Exclude Tam Nương</span>
+            <span>Exclude Tam Nương (🧙‍♀️)</span>
           </label>
           <label class="rule-check">
             <input id="rule-nguyet-ky" type="checkbox" checked />
-            <span>Exclude Nguyệt Kỵ</span>
+            <span>Exclude Nguyệt Kỵ (5️⃣)</span>
           </label>
           <label class="rule-check">
             <input id="rule-taboo" type="checkbox" checked />
-            <span>Exclude Taboo Almanac Days</span>
+            <span>Exclude Taboo Almanac Days (⚠️)</span>
           </label>
           <label class="rule-check">
             <input id="rule-conflict" type="checkbox" checked />
-            <span>Exclude Conflicting Signs</span>
+            <span>Exclude Conflicting Signs (⚔️)</span>
           </label>
           <label class="rule-check">
             <input id="rule-hac-dao" type="checkbox" checked />
-            <span>Mark Hắc Đạo</span>
+            <span>Mark Hắc Đạo (☁️)</span>
           </label>
         </fieldset>
       </form>
@@ -374,6 +432,6 @@
       </div>
       <p id="view-date" aria-live="polite"></p>
     </main>
-    <script type="module" src="./calendar.js?v=17"></script>
+    <script type="module" src="./calendar.js?v=20"></script>
   </body>
 </html>

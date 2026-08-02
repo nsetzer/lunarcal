@@ -19,6 +19,7 @@ const hourB = document.getElementById("hour-b");
 const stemA = document.getElementById("stem-a");
 const stemB = document.getElementById("stem-b");
 const compareBody = document.querySelector("#compare-pillars tbody");
+const totalsBody = document.querySelector("#compare-totals tbody");
 const viewMonth = document.getElementById("view-month");
 const viewYear = document.getElementById("view-year");
 const ruleNamTuoi = document.getElementById("rule-nam-tuoi");
@@ -162,6 +163,24 @@ function destinyCell(element, destiny) {
   </div>`;
 }
 
+/** Earthly Branch polarity + native element (Địa chi). */
+const BRANCH_NATURE = {
+  Rat: { polarity: "Yang", element: "Water" },
+  Buffalo: { polarity: "Yin", element: "Earth" },
+  Tiger: { polarity: "Yang", element: "Wood" },
+  Cat: { polarity: "Yin", element: "Wood" },
+  Dragon: { polarity: "Yang", element: "Earth" },
+  Snake: { polarity: "Yin", element: "Fire" },
+  Horse: { polarity: "Yang", element: "Fire" },
+  Goat: { polarity: "Yin", element: "Earth" },
+  Monkey: { polarity: "Yang", element: "Metal" },
+  Rooster: { polarity: "Yin", element: "Metal" },
+  Dog: { polarity: "Yang", element: "Earth" },
+  Pig: { polarity: "Yin", element: "Water" },
+};
+
+const ELEMENT_ORDER = ["Wood", "Fire", "Earth", "Metal", "Water"];
+
 function datePillars(dateInput, hourInput) {
   const { year, month, day } = parseDateValue(dateInput.value);
   const hour = parseHourValue(hourInput.value);
@@ -176,6 +195,71 @@ function datePillars(dateInput, hourInput) {
     Day: formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity),
     Hour: formatPillar(data.hourElement, data.hourAnimal, data.hourPolarity),
   };
+}
+
+/** Sum Yin/Yang and five elements from stem + branch of all four pillars. */
+function pillarTotals(pillars) {
+  const yinYang = { Yin: 0, Yang: 0 };
+  const elements = { Wood: 0, Fire: 0, Earth: 0, Metal: 0, Water: 0 };
+  for (const name of ["Year", "Month", "Day", "Hour"]) {
+    const p = pillars[name];
+    if (!p) continue;
+    if (yinYang[p.polarity] !== undefined) yinYang[p.polarity] += 1;
+    if (elements[p.element] !== undefined) elements[p.element] += 1;
+    const branch = BRANCH_NATURE[p.animal];
+    if (!branch) continue;
+    yinYang[branch.polarity] += 1;
+    elements[branch.element] += 1;
+  }
+  return { yinYang, elements };
+}
+
+function elementCountCells(totals) {
+  return ELEMENT_ORDER.map((el) => totals.elements[el] || 0)
+    .map((n) => `<span>${n}</span>`)
+    .join("");
+}
+
+function mergeTotals(a, b) {
+  const ta = pillarTotals(a);
+  const tb = pillarTotals(b);
+  return {
+    yinYang: {
+      Yin: ta.yinYang.Yin + tb.yinYang.Yin,
+      Yang: ta.yinYang.Yang + tb.yinYang.Yang,
+    },
+    elements: Object.fromEntries(
+      ELEMENT_ORDER.map((el) => [
+        el,
+        (ta.elements[el] || 0) + (tb.elements[el] || 0),
+      ]),
+    ),
+  };
+}
+
+function updateTotalsTable(a, b) {
+  if (!totalsBody) return;
+  const totals = mergeTotals(a, b);
+  const emojiRow = ELEMENT_ORDER.map(
+    (el) => `<span aria-hidden="true">${ELEMENT_EMOJI[el] || ""}</span>`,
+  ).join("");
+  totalsBody.innerHTML = `
+    <tr class="totals-heading-row">
+      <th scope="colgroup" colspan="3">Totals</th>
+    </tr>
+    <tr>
+      <th scope="row">Yin / Yang</th>
+      <td class="polarity-cell"><span aria-hidden="true">🌙</span> ${totals.yinYang.Yin}</td>
+      <td class="polarity-cell"><span aria-hidden="true">☀️</span> ${totals.yinYang.Yang}</td>
+    </tr>
+    <tr class="elem-row">
+      <th scope="row">Element Count</th>
+      <td colspan="2"><div class="elem-bins">${emojiRow}</div></td>
+    </tr>
+    <tr class="elem-count-row">
+      <th scope="row"></th>
+      <td colspan="2"><div class="elem-bins elem-bins--counts">${elementCountCells(totals)}</div></td>
+    </tr>`;
 }
 
 function updateCompareTable() {
@@ -212,8 +296,10 @@ function updateCompareTable() {
       </tr>`;
         })
         .join("");
+    updateTotalsTable(a, b);
   } catch {
     compareBody.innerHTML = "";
+    if (totalsBody) totalsBody.innerHTML = "";
   }
 }
 

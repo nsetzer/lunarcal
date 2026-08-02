@@ -500,6 +500,66 @@ input:focus {
   margin-top: 1.25rem;
 }
 
+.pillars-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: rise 900ms 160ms ease both;
+}
+
+.pillars-card .pillars--nested {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  animation: none;
+}
+
+.pillars-card .pillars--totals {
+  border-top: 1px solid var(--line);
+}
+
+.pillars--totals .totals-heading-row th {
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: linear-gradient(180deg, rgba(200, 226, 216, 0.65), transparent);
+}
+
+.pillars--totals .polarity-cell,
+.pillars--totals .elem-bin {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.pillars--totals .elem-row td {
+  padding-top: 0.55rem;
+  padding-bottom: 0.35rem;
+}
+
+.pillars--totals .elem-count-row td {
+  padding-top: 0.2rem;
+}
+
+.pillars--totals .elem-bins {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(1.6rem, 1fr));
+  gap: 0.25rem;
+  justify-items: center;
+  font-size: 1.15rem;
+}
+
+.pillars--totals .elem-bins--counts {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
 .pillar-cell {
   display: grid;
   gap: 0.2rem;
@@ -564,6 +624,20 @@ input:focus {
   font-size: 1.55rem;
   font-weight: 700;
   color: var(--accent);
+}
+
+.pillar-meanings {
+  margin: 0.85rem 0 0;
+  padding-left: 1.2rem;
+  max-width: none;
+}
+
+.pillar-meanings li {
+  margin: 0.55rem 0 0;
+}
+
+.pillar-meanings li:first-child {
+  margin-top: 0;
 }
 
 .controls--month {
