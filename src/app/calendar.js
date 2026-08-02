@@ -30,6 +30,8 @@ const ruleNguyetKy = document.getElementById("rule-nguyet-ky");
 const ruleTaboo = document.getElementById("rule-taboo");
 const ruleConflict = document.getElementById("rule-conflict");
 const ruleHacDao = document.getElementById("rule-hac-dao");
+const ruleHoangDao = document.getElementById("rule-hoang-dao");
+const showElementalBalance = document.getElementById("show-elemental-balance");
 const canvas = document.getElementById("calendar");
 const ctx = canvas.getContext("2d");
 
@@ -359,6 +361,7 @@ function activeRules() {
     taboo: Boolean(ruleTaboo?.checked),
     conflict: Boolean(ruleConflict?.checked),
     hacDao: Boolean(ruleHacDao?.checked),
+    hoangDao: Boolean(ruleHoangDao?.checked),
   };
 }
 
@@ -436,7 +439,7 @@ function classifyDay(data, rules, conflictAnimals, birthYearAnimals) {
   }
 
   const hoangList = HOANG_DAO_BY_MONTH[data.lunarMonth] || [];
-  if (hoangList.includes(data.dayAnimal)) {
+  if (rules.hoangDao && hoangList.includes(data.dayAnimal)) {
     return {
       excluded: false,
       hacDao: false,
@@ -590,7 +593,9 @@ function drawCalendar() {
     ctx.strokeRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
 
     const lunarLabel = `${mark.emoji}${data.lunarDay}/${data.lunarMonth}`;
-    const stemLabel = `${POLARITY_EMOJI[data.dayPolarity] || ""}${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
+    const stemLabel = showElementalBalance?.checked
+      ? `${POLARITY_EMOJI[data.dayPolarity] || ""}${ELEMENT_EMOJI[data.dayElement] || ""}${ELEMENT_EMOJI[BRANCH_NATURE[data.dayAnimal]?.element] || ""}`
+      : `${ELEMENT_EMOJI[data.dayElement] || ""}${ANIMAL_EMOJI[data.dayAnimal] || ""}`;
     const dayLabel =
       year === 2025 && month === 10 && day === 2 ? `${day} 💒` : String(day);
 
@@ -700,6 +705,8 @@ for (const el of [
   ruleTaboo,
   ruleConflict,
   ruleHacDao,
+  ruleHoangDao,
+  showElementalBalance,
 ]) {
   if (!el) continue;
   el.addEventListener("input", refresh);
