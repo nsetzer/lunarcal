@@ -47,7 +47,7 @@
             </label>
             <label>
               <span>Hour</span>
-              <input id="hour-a" type="number" min="0" max="23" step="1" required />
+              <input id="hour-a" type="text" inputmode="numeric" pattern="[0-9]*" />
             </label>
           </div>
           <!-- <p id="stem-a" class="stem-emoji" aria-live="polite"></p> -->
@@ -60,7 +60,7 @@
             </label>
             <label>
               <span>Hour</span>
-              <input id="hour-b" type="number" min="0" max="23" step="1" required />
+              <input id="hour-b" type="text" inputmode="numeric" pattern="[0-9]*" />
             </label>
           </div>
           <!-- <p id="stem-b" class="stem-emoji" aria-live="polite"></p> -->
@@ -474,11 +474,11 @@
       <form class="controls controls--month" autocomplete="off">
         <label>
           <span>Month</span>
-          <input id="view-month" type="number" min="1" max="12" step="1" required />
+          <input id="view-month" type="text" inputmode="numeric" pattern="[0-9]*" required />
         </label>
         <label>
           <span>Year</span>
-          <input id="view-year" type="number" min="1900" max="2099" step="1" required />
+          <input id="view-year" type="text" inputmode="numeric" pattern="[0-9]*" required />
         </label>
         <button type="button" id="month-prev" class="month-nav-btn" aria-label="Previous month">
           ◀
@@ -532,6 +532,6 @@
       </div>
       <p id="view-date" aria-live="polite"></p>
     </main>
-    <script type="module" src="./calendar.js?v=24"></script>
+    <script type="module" src="./calendar.js?v=28"></script>
   </body>
 </html>

@@ -105,11 +105,15 @@ function parseDateValue(value) {
   return { year, month, day };
 }
 
+function isHourEmpty(input) {
+  return String(input?.value ?? "").trim() === "";
+}
+
 function parseHourValue(value) {
-  const hour = Number(value);
-  if (!Number.isFinite(hour) || hour < 0 || hour > 23) {
-    throw new Error("Invalid hour");
-  }
+  const raw = String(value ?? "").trim();
+  if (raw === "" || !/^[0-9]+$/.test(raw)) return null;
+  const hour = Number(raw);
+  if (!Number.isFinite(hour) || hour < 0 || hour > 23) return null;
   return Math.trunc(hour);
 }
 
@@ -139,6 +143,11 @@ function pillarCell(p) {
     <span class="pillar-cell-emoji" aria-hidden="true">${p.stemEmojis}</span>
     <span class="pillar-cell-text">${text}</span>
   </div>`;
+}
+
+function hourColumnCell(input, pillar) {
+  if (isHourEmpty(input)) return "n/a";
+  return pillarCell(pillar);
 }
 
 /** Good match → green check; no match → yellow neutral. */
@@ -186,8 +195,19 @@ const ELEMENT_ORDER = ["Wood", "Fire", "Earth", "Metal", "Water"];
 
 function datePillars(dateInput, hourInput) {
   const { year, month, day } = parseDateValue(dateInput.value);
-  const hour = parseHourValue(hourInput.value);
-  const data = gregorianToLunarAnimals(year, month, day, hour, 0);
+  const data = gregorianToLunarAnimals(year, month, day);
+  let hourPillar = null;
+  if (!isHourEmpty(hourInput)) {
+    const hour = parseHourValue(hourInput.value);
+    if (hour !== null) {
+      const timed = gregorianToLunarAnimals(year, month, day, hour, 0);
+      hourPillar = formatPillar(
+        timed.hourElement,
+        timed.hourAnimal,
+        timed.hourPolarity,
+      );
+    }
+  }
   return {
     destiny: {
       element: data.yearDestinyElement,
@@ -196,7 +216,7 @@ function datePillars(dateInput, hourInput) {
     Year: formatPillar(data.yearElement, data.yearAnimal, data.yearPolarity),
     Month: formatPillar(data.monthElement, data.monthAnimal, data.monthPolarity),
     Day: formatPillar(data.dayElement, data.dayAnimal, data.dayPolarity),
-    Hour: formatPillar(data.hourElement, data.hourAnimal, data.hourPolarity),
+    Hour: hourPillar,
   };
 }
 
@@ -265,27 +285,37 @@ function updateTotalsTable(a, b) {
     </tr>`;
 }
 
-function updateCompareTable() {
+function tryDatePillars(dateInput, hourInput) {
   try {
-    const a = datePillars(dateA, hourA);
-    const b = datePillars(dateB, hourB);
-    const destinyRow = `
+    return datePillars(dateInput, hourInput);
+  } catch {
+    return null;
+  }
+}
+
+function updateCompareTable() {
+  const a = tryDatePillars(dateA, hourA);
+  const b = tryDatePillars(dateB, hourB);
+  if (!a && !b) {
+    compareBody.innerHTML = "";
+    if (totalsBody) totalsBody.innerHTML = "";
+    return;
+  }
+
+  const destinyRow = `
       <tr>
         <th scope="row">Elemental Destiny</th>
-        <td>${destinyCell(a.destiny.element, a.destiny.destiny)}</td>
-        <td>${destinyCell(b.destiny.element, b.destiny.destiny)}</td>
+        <td>${a ? destinyCell(a.destiny.element, a.destiny.destiny) : "—"}</td>
+        <td>${b ? destinyCell(b.destiny.element, b.destiny.destiny) : "—"}</td>
         <td></td>
       </tr>`;
-    const rows = ["Year", "Month", "Day", "Hour"];
-    compareBody.innerHTML =
-      destinyRow +
-      rows
-        .map((name) => {
-          const pa = a[name];
-          const pb = b[name];
-          const relation = elementRelation(pa.element, pb.element);
-          // NOTE: temporarily hide Tam Hợp, Lục Hợp, Lục Xung, Tứ Hành Xung
-          return `
+  const pillarRows = ["Year", "Month", "Day"]
+    .map((name) => {
+      const pa = a ? a[name] : null;
+      const pb = b ? b[name] : null;
+      const relation = pa && pb ? elementRelation(pa.element, pb.element) : "—";
+      // NOTE: temporarily hide Tam Hợp, Lục Hợp, Lục Xung, Tứ Hành Xung
+      return `
       <tr>
         <th scope="row">${name}</th>
         <td>${pillarCell(pa)}</td>
@@ -297,13 +327,25 @@ function updateCompareTable() {
         <td class="rel-cell">${badMark(isLucXung(pa.animal, pb.animal), "Lục Xung")}</td>
         <td class="rel-cell">${badMark(isTuHanhXung(pa.animal, pb.animal), "Tứ Hành Xung")}</td>-->
       </tr>`;
-        })
-        .join("");
-    updateTotalsTable(a, b);
-  } catch {
-    compareBody.innerHTML = "";
-    if (totalsBody) totalsBody.innerHTML = "";
-  }
+    })
+    .join("");
+  const hourRelation =
+    !isHourEmpty(hourA) &&
+    !isHourEmpty(hourB) &&
+    a?.Hour &&
+    b?.Hour
+      ? elementRelation(a.Hour.element, b.Hour.element)
+      : "—";
+  const hourRow = `
+      <tr>
+        <th scope="row">Hour</th>
+        <td>${hourColumnCell(hourA, a && a.Hour)}</td>
+        <td>${hourColumnCell(hourB, b && b.Hour)}</td>
+        <td>${hourRelation || "—"}</td>
+      </tr>`;
+  compareBody.innerHTML = destinyRow + pillarRows + hourRow;
+  if (a && b) updateTotalsTable(a, b);
+  else if (totalsBody) totalsBody.innerHTML = "";
 }
 
 function daysInMonth(year, month) {
@@ -457,15 +499,29 @@ function classifyDay(data, rules, conflictAnimals, birthYearAnimals) {
   };
 }
 
+const VIEW_YEAR_MIN = 1900;
+const VIEW_YEAR_MAX = 2099;
+const VIEW_MONTH_MIN = 1;
+const VIEW_MONTH_MAX = 12;
+
 function viewYearMonth() {
-  let year = Number(viewYear.value);
-  let month = Number(viewMonth.value);
+  const yearRaw = viewYear.value.trim();
+  const monthRaw = viewMonth.value.trim();
+  if (yearRaw === "" || monthRaw === "") return null;
+  if (!/^[0-9]+$/.test(yearRaw) || !/^[0-9]+$/.test(monthRaw)) return null;
+
+  const year = Number(yearRaw);
+  const month = Number(monthRaw);
   if (!Number.isFinite(year) || !Number.isFinite(month)) return null;
-  year = Math.min(2099, Math.max(1900, Math.trunc(year)));
-  month = Math.min(12, Math.max(1, Math.trunc(month)));
-  if (String(viewYear.value) !== String(year)) viewYear.value = String(year);
-  if (String(viewMonth.value) !== String(month)) viewMonth.value = String(month);
+  if (year < VIEW_YEAR_MIN || year > VIEW_YEAR_MAX) return null;
+  if (month < VIEW_MONTH_MIN || month > VIEW_MONTH_MAX) return null;
   return { year, month };
+}
+
+function onViewYearMonthInput() {
+  if (viewYear.value.trim() === "" || viewMonth.value.trim() === "") return;
+  if (!viewYearMonth()) return;
+  refresh();
 }
 
 /** Resize backing store only when CSS size or DPR actually changes. */
@@ -685,7 +741,7 @@ function shiftMonth(delta) {
     month -= 12;
     year += 1;
   }
-  year = Math.min(2099, Math.max(1900, year));
+  year = Math.min(VIEW_YEAR_MAX, Math.max(VIEW_YEAR_MIN, year));
   viewMonth.value = String(month);
   viewYear.value = String(year);
   refresh();
@@ -696,8 +752,6 @@ for (const el of [
   dateB,
   hourA,
   hourB,
-  viewMonth,
-  viewYear,
   ruleNamTuoi,
   ruleGhost,
   ruleTamNuong,
@@ -712,6 +766,10 @@ for (const el of [
   el.addEventListener("input", refresh);
   el.addEventListener("change", refresh);
 }
+viewMonth.addEventListener("input", onViewYearMonthInput);
+viewYear.addEventListener("input", onViewYearMonthInput);
+viewMonth.addEventListener("change", onViewYearMonthInput);
+viewYear.addEventListener("change", onViewYearMonthInput);
 document.getElementById("month-prev").addEventListener("click", () => shiftMonth(-1));
 document.getElementById("month-next").addEventListener("click", () => shiftMonth(1));
 
