@@ -660,10 +660,27 @@ input:focus {
 }
 
 .controls--month {
-  grid-template-columns: auto minmax(6.5rem, 9rem) minmax(7.5rem, 11rem) auto;
+  grid-template-columns: min-content min-content auto auto;
   align-items: end;
+  justify-content: start;
   margin-top: 2rem;
   margin-bottom: 0;
+}
+
+.month-field input {
+  width: auto;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.month-field--month input {
+  width: 3.25rem;
+  max-width: 3.25rem;
+}
+
+.month-field--year input {
+  width: 5.75rem;
+  max-width: 5.75rem;
 }
 
 .rule-filters {
@@ -818,7 +835,7 @@ input:focus {
   }
 
   .controls--month {
-    grid-template-columns: auto 1fr 1fr auto;
+    grid-template-columns: min-content min-content auto auto;
   }
 
   .date-pair {

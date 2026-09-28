@@ -472,13 +472,13 @@
       </aside>
 
       <form class="controls controls--month" autocomplete="off">
-        <label>
+        <label class="month-field month-field--month">
           <span>Month</span>
-          <input id="view-month" type="text" inputmode="numeric" pattern="[0-9]*" required />
+          <input id="view-month" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" size="2" required />
         </label>
-        <label>
+        <label class="month-field month-field--year">
           <span>Year</span>
-          <input id="view-year" type="text" inputmode="numeric" pattern="[0-9]*" required />
+          <input id="view-year" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" size="4" required />
         </label>
         <button type="button" id="month-prev" class="month-nav-btn" aria-label="Previous month">
           ◀
